@@ -172,8 +172,11 @@ public class MailMerge {
 		    // read the current full Body text
 		    String srcString = body.xmlText();
 		    
+		    // TODO: breaks appendBody() below...
+		    //removeBody(body);
+		    
 		    // apply the replacements
-		    int docNr = 1;
+		    //int docNr = 1;
 		    for(List<String> data : values) {
 		    	String replaced = srcString;
 		    	for(int fieldNr = 0;fieldNr < headers.size();fieldNr++) {
@@ -188,25 +191,56 @@ public class MailMerge {
 		    	}
 		    	
 		    	// TODO: combine all results into one document instead of writing multiple documents
-			    CTBody makeBody = CTBody.Factory.parse(replaced);
+			    /*CTBody makeBody = CTBody.Factory.parse(replaced);
 			    body.set(makeBody);
 			    
 			    File resultFile = getOutputFile(outputFile, docNr);
 			    log.info("Writing " + resultFile + " for " + data);
 				try (OutputStream out = new FileOutputStream(resultFile)) {
 			    	doc.write(out);
-			    }
+			    }*/
 			    
-			    docNr++;
+				appendBody(body, replaced);
+				
+			    //docNr++;
+		    }
+		    
+		    log.info("Writing overall result to " + outputFile);
+			try (OutputStream out = new FileOutputStream(outputFile)) {
+		    	doc.write(out);
 		    }
 		}
 	}
 	
-	private static File getOutputFile(String outputFile, int i) {
-		String dir = FilenameUtils.getFullPath(outputFile);
-		String base = FilenameUtils.getBaseName(outputFile);
-		String ext = FilenameUtils.getExtension(outputFile);
-		
-		return new File(dir, base + "." + i + "." + ext);
+	private static void appendBody(CTBody src, String append) throws XmlException {
+	    XmlOptions optionsOuter = new XmlOptions();
+	    optionsOuter.setSaveOuter();
+	    String srcString = src.xmlText();
+	    String prefix = srcString.substring(0,srcString.indexOf(">")+1);
+	    String mainPart = srcString.substring(srcString.indexOf(">")+1,srcString.lastIndexOf("<"));
+	    String sufix = srcString.substring( srcString.lastIndexOf("<") );
+	    String addPart = append.substring(append.indexOf(">") + 1, append.lastIndexOf("<"));
+	    CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+addPart+sufix);
+	    src.set(makeBody);
 	}
+
+//	private static void removeBody(CTBody src, String append) throws XmlException {
+//	    XmlOptions optionsOuter = new XmlOptions();
+//	    optionsOuter.setSaveOuter();
+//	    String srcString = src.xmlText();
+//	    String prefix = srcString.substring(0,srcString.indexOf(">")+1);
+//	    String mainPart = srcString.substring(srcString.indexOf(">")+1,srcString.lastIndexOf("<"));
+//	    String sufix = srcString.substring( srcString.lastIndexOf("<") );
+//	    String addPart = append.substring(append.indexOf(">") + 1, append.lastIndexOf("<"));
+//	    CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+addPart+sufix);
+//	    src.set(makeBody);
+//	}
+	
+//	private static File getOutputFile(String outputFile, int i) {
+//		String dir = FilenameUtils.getFullPath(outputFile);
+//		String base = FilenameUtils.getBaseName(outputFile);
+//		String ext = FilenameUtils.getExtension(outputFile);
+//		
+//		return new File(dir, base + "." + i + "." + ext);
+//	}
 }
