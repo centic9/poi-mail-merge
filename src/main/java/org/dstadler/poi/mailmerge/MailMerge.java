@@ -2,6 +2,7 @@ package org.dstadler.poi.mailmerge;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,16 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.openxml4j.opc.PackageAccess;
+import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 import org.apache.poi.ss.format.CellFormat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -73,7 +76,7 @@ public class MailMerge {
 	}
 	
 	private void readExcelFile(File excelFile) throws EncryptedDocumentException, InvalidFormatException, IOException {
-		try (Workbook wb = open(excelFile)) {
+		try (Workbook wb = create(excelFile, true)) {
 			Sheet sheet = wb.getSheetAt(0);
 			if(sheet == null) {
 				throw new IllegalArgumentException("Provided Microsoft Excel file " + excelFile + " does not have any sheet");
@@ -137,29 +140,36 @@ public class MailMerge {
 	}
 
 	@SuppressWarnings("resource")
-	private Workbook open(File excelFile) throws IOException,
-			InvalidFormatException {
-		// workaround to open file read-only until changes to WorkbookFactory are available
-        OPCPackage pkg = OPCPackage.open(excelFile, PackageAccess.READ);
-        try {
-            return new XSSFWorkbook(pkg);
-        } catch (IOException ioe) {
-            // ensure that file handles are closed (use revert() to not re-write the file)
-            pkg.revert();
-            //pkg.close();
-            
-            // rethrow exception
-            throw ioe;
-        } catch (IllegalArgumentException ioe) {
-            // ensure that file handles are closed (use revert() to not re-write the file) 
-            pkg.revert();
-            //pkg.close();
-            
-            // rethrow exception
-            throw ioe;
+    public static Workbook create(File file, boolean readOnly) throws IOException, InvalidFormatException, EncryptedDocumentException {
+        if (! file.exists()) {
+            throw new FileNotFoundException(file.toString());
         }
-		//return WorkbookFactory.create(excelFile);
-	}
+
+        try {
+            NPOIFSFileSystem fs = new NPOIFSFileSystem(file, readOnly);
+            return WorkbookFactory.create(fs);
+        } catch(OfficeXmlFileException e) {
+            // opening as .xls failed => try opening as .xlsx
+            OPCPackage pkg = OPCPackage.open(file, readOnly ? PackageAccess.READ : PackageAccess.READ_WRITE);
+            try {
+                return new XSSFWorkbook(pkg);
+            } catch (IOException ioe) {
+                // ensure that file handles are closed (use revert() to not re-write the file)
+                pkg.revert();
+                //pkg.close();
+                
+                // rethrow exception
+                throw ioe;
+            } catch (IllegalArgumentException ioe) {
+                // ensure that file handles are closed (use revert() to not re-write the file) 
+                pkg.revert();
+                //pkg.close();
+                
+                // rethrow exception
+                throw ioe;
+            }
+        }
+    }
 
 	private void replace(File wordTemplate, String outputFile) throws XmlException, IOException {
 		try (InputStream is = new FileInputStream(wordTemplate)) {
