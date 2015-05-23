@@ -7,6 +7,10 @@ mainClassName = "org.dstadler.poi.mailmerge.MailMerge"
 version = '1.0'
 sourceCompatibility = 1.7
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'Application to produce mail-merge document from a template and a list of values', 'Implementation-Version': version
@@ -20,6 +24,10 @@ repositories {
 dependencies {
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'org.dstadler:commons-dost:1+'
+
+	compile 'org.apache.poi:poi:3.12'
+	compile 'org.apache.poi:poi-ooxml:3.12'
+	compile 'org.apache.poi:poi-scratchpad:3.12'
 
 	// for TestHelpers we need junit during normal compile...
 	compile "junit:junit:[4.12,)"
