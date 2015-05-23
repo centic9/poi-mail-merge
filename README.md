@@ -3,14 +3,13 @@
 This is a small application which allows to repeatedely replace markers in a Microsoft Word document with items taken from a CSV/Microsoft Excel file. 
 
 I started this project as I was quite disappointed with the functionality that LibreOffice offers, I especially wanted something that is repeatable/automateable
-and does not produce spurious strange results and needs re-configuration each time the mail-merge needs to be (re-)run.
+and does not produce spurious strange results and also does not need re-configuration each time the mail-merge is (re-)run.
 
 ## How it works
 
-you provide a word-document which contains template-markers for things that should be replaced, e.g. "<first-name> <last-name>".
+you provide a word-document which contains template-markers (enclosed in ${...}) for things that should be replaced, e.g. "${first-name} ${last-name}".
 
-The first sheet of the Excel file is read and needs to contain a header row which is used to match the template-names used in 
-the Word-template.
+The first sheet of the Excel file is read and the application expects a header-row which is used to match the template-names used in the Word-template.
 
 The result is a single merged Word-document which contains a copy of the template for each line in the Excel file.
 
@@ -22,7 +21,7 @@ The result is a single merged Word-document which contains a copy of the templat
 	cd poi-mail-merge
 	./gradlew installDist
 
-### Use it
+### Run it
 
 	./run.sh <word-template> <excel-file> <output-file>
 
