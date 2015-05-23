@@ -1,0 +1,57 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'jacoco'
+apply plugin: 'application'
+
+mainClassName = "org.dstadler.poi.mailmerge.MailMerge"
+version = '1.0'
+sourceCompatibility = 1.7
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Application to produce mail-merge document from a template and a list of values', 'Implementation-Version': version
+    }
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.apache.commons:commons-lang3:3.4'
+	compile 'org.dstadler:commons-dost:1+'
+
+	// for TestHelpers we need junit during normal compile...
+	compile "junit:junit:[4.12,)"
+}
+
+// work around unnecessary timestamp in generated file which always causes dirty files in version control
+// https://issues.gradle.org/browse/GRADLE-2293
+task adjustEclipseSettingsFile << {
+   ant.replaceregexp(match:'^#.*', replace:'', flags:'g', byline:true) {
+      fileset(dir: project.projectDir, includes: '.settings/org.eclipse.jdt.core.prefs')
+   }
+}
+task sortEclipseSettingsFile << {
+   new File(project.projectDir, '.settings/org.eclipse.jdt.core.prefs').with { it.text = it.readLines().findAll { it }.sort().join('\n') }
+}
+eclipseJdt.finalizedBy adjustEclipseSettingsFile
+eclipseJdt.finalizedBy sortEclipseSettingsFile
+
+test {
+	systemProperties = System.properties
+
+	// enable to show standard out and standard error of the test JVM(s) on the console
+	// testLogging.showStandardStreams = true
+
+	// http://forums.gradle.org/gradle/topics/jacoco_related_failure_in_multiproject_build
+	systemProperties['user.dir'] = workingDir
+}
+
+jacoco {
+	toolVersion = "0.7.4.201502262128"
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.4'
+}
