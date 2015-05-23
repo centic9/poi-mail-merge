@@ -43,6 +43,8 @@ public class MailMerge {
 	private List<List<String>> values = new ArrayList<>();
 	
 	public static void main(String[] args) throws Exception {
+		LoggerFactory.initLogging();
+		
 		if(args.length != 3) {
 			throw new IllegalArgumentException("Usage: MailMerge <word-template> <excel-template> <output-file>");
 		}
@@ -158,6 +160,8 @@ public class MailMerge {
 	    // apply the replacements
 	    boolean first = true;
 	    for(List<String> data : values) {
+	    	log.info("Applying to template: " + data);
+
 	    	String replaced = srcString;
 	    	for(int fieldNr = 0;fieldNr < headers.size();fieldNr++) {
 	    		String header = headers.get(fieldNr);

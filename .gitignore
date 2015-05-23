@@ -8,3 +8,6 @@ build/
 .classpath
 .project
 /bin/
+
+# logfiles
+*.log
