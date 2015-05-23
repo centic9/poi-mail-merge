@@ -30,8 +30,8 @@ The result is a single merged Word-document which contains a copy of the templat
 
 ### Formatting can confuse the replacement
 
-If there are different formattings applied to the strings, the resulting XML-representation of the document might 
-be split into multiple XML-Tags and thus might prevent the replacement from happening. 
+If there are multiple formattings applied to a strings that holds a template-pattern, the resulting XML-representation 
+of the document might be split into multiple XML-Tags and thus might prevent the replacement from happening. 
 
 A workaround is to use the formatting tool to ensure that the replacement tags have only one formatting applied to them. 
 
