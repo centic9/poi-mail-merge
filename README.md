@@ -23,11 +23,16 @@ The result is a single merged Word-document which contains a copy of the templat
 
 ### Run it
 
-	./run.sh <word-template> <excel-file> <output-file>
+	./run.sh <word-template> <excel/csv-file> <output-file>
 
 ## Known issues
 
-### Formatting can confuse the replacement
+### Only one CSV format supported
+
+Currently only CSV files which use comma as delimiter and double-quotes for quoting text are supported. Other formats
+required code-changes, but can usually easily be supported by adjusting the CSFFormat definition.
+
+### Word-Formatting can confuse the replacement
 
 If there are multiple formattings applied to a strings that holds a template-pattern, the resulting XML-representation 
 of the document might be split into multiple XML-Tags and thus might prevent the replacement from happening. 

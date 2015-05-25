@@ -3,13 +3,20 @@ package org.dstadler.poi.mailmerge;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.format.CellFormat;
@@ -29,7 +36,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
  * document which contains replacement templates in the form of ${name}, ${first-name}, ...
  * and an Microsoft Excel spreadsheet which contains a list of entries that are merged in.
  * 
- * Call this application with parameters <word-template> <excel-template> <output-file>
+ * Call this application with parameters <word-template> <excel/csv-template> <output-file>
  * 
  * The resulting document has all resulting documents concatenated.
  * 
@@ -46,7 +53,7 @@ public class MailMerge {
 		LoggerFactory.initLogging();
 		
 		if(args.length != 3) {
-			throw new IllegalArgumentException("Usage: MailMerge <word-template> <excel-template> <output-file>");
+			throw new IllegalArgumentException("Usage: MailMerge <word-template> <excel/csv-template> <output-file>");
 		}
 
 		File wordTemplate = new File(args[0]);
@@ -57,17 +64,21 @@ public class MailMerge {
 			throw new IllegalArgumentException("Could not read Microsoft Word template " + wordTemplate);
 		}
 		if(!excelFile.exists() || !excelFile.isFile()) {
-			throw new IllegalArgumentException("Could not read Microsoft Excel file " + excelFile);
+			throw new IllegalArgumentException("Could not read data file " + excelFile);
 		}
 		
 		new MailMerge().merge(wordTemplate, excelFile, outputFile);
 	}
 
-	private void merge(File wordTemplate, File excelFile, String outputFile) throws Exception {
-		log.info("Merging data from " + wordTemplate + " and " + excelFile + " into " + outputFile);
+	private void merge(File wordTemplate, File dataFile, String outputFile) throws Exception {
+		log.info("Merging data from " + wordTemplate + " and " + dataFile + " into " + outputFile);
 
-		// read the lines from the Excel file
-		readExcelFile(excelFile);
+		// read the lines from the data-file
+		if(FilenameUtils.getExtension(dataFile.getName()).equals("csv")) {
+			readCSVFile(dataFile);
+		} else {
+			readExcelFile(dataFile);
+		}
 		
 		// now open the word file and apply the changes
 		try (InputStream is = new FileInputStream(wordTemplate)) {
@@ -83,6 +94,43 @@ public class MailMerge {
 		}
 	}
 	
+	private void readCSVFile(File csvFile) throws IOException {
+		// open file
+		// List<String> lines = FileUtils.readLines(file, null);
+		try (Reader reader = new FileReader(csvFile)) {
+			CSVFormat strategy = CSVFormat.DEFAULT.
+					withHeader().
+			        withDelimiter(',').
+                    withQuote('"').
+			        withCommentMarker((char)0).
+			        withIgnoreEmptyLines().
+			        withIgnoreSurroundingSpaces();
+
+			try (CSVParser parser = new CSVParser(reader, strategy)) {
+				Map<String, Integer> headerMap = parser.getHeaderMap();
+				for(Map.Entry<String,Integer> entry : headerMap.entrySet()) {
+					headers.add(entry.getKey());
+					log.info("Had header '" + entry.getKey() + "' for column " + entry.getValue());
+				}
+
+				List<CSVRecord> lines = parser.getRecords();
+                log.info("Found " + lines.size() + " lines");
+                for(CSVRecord line : lines) {
+	                List<String> data = new ArrayList<>();
+	                for(int pos = 0;pos < headerMap.size();pos++) {
+						if(line.size() <= pos) {
+							data.add(null);
+						} else {
+							data.add(line.get(pos));
+						}
+					}
+					
+					values.add(data);
+				}
+			}
+		}
+	}
+
 	private void readExcelFile(File excelFile) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		try (Workbook wb = POIUtils.create(excelFile, true)) {
 			Sheet sheet = wb.getSheetAt(0);
