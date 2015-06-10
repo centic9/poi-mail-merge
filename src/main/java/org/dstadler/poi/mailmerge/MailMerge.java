@@ -139,6 +139,7 @@ public class MailMerge {
 			}
 	
 			final int start;
+			final int end;
 			{ // read headers
 				Row row = sheet.getRow(0);
 				if(row == null) {
@@ -147,10 +148,11 @@ public class MailMerge {
 				}
 				
 				start = row.getFirstCellNum();
-				for(int cellnum = start;cellnum < row.getLastCellNum();cellnum++) {
+				end = row.getLastCellNum();
+				for(int cellnum = start;cellnum <= end;cellnum++) {
 					Cell cell = row.getCell(cellnum);
 					if(cell == null) {
-						// add null to the headers if there a empty columns in the sheet
+						// add null to the headers if there are columns without title in the sheet
 						headers.add(null);
 						log.info("Had empty header for column " + CellReference.convertNumToColString(cellnum));
 					} else {
@@ -161,7 +163,7 @@ public class MailMerge {
 				}
 			}
 	
-			for(int rownum = 1; rownum < sheet.getLastRowNum();rownum++) {
+			for(int rownum = 1; rownum <= sheet.getLastRowNum();rownum++) {
 				Row row = sheet.getRow(rownum);
 				if(row == null) {
 					// ignore missing rows
@@ -169,10 +171,10 @@ public class MailMerge {
 				}
 			
 				List<String> data = new ArrayList<>();
-				for(int colnum = start;colnum < headers.size();colnum++) {
+				for(int colnum = start;colnum <= end;colnum++) {
 					Cell cell = row.getCell(colnum);  
 					if(cell == null) {
-						// store null-data for cells 
+						// store null-data for empty/missing cells 
 						data.add(null);
 					} else {
 						final String value;
@@ -214,10 +216,16 @@ public class MailMerge {
 	    	for(int fieldNr = 0;fieldNr < headers.size();fieldNr++) {
 	    		String header = headers.get(fieldNr);
 	    		String value = data.get(fieldNr);
-				if(header == null || value == null) {
-	    			// ignore missing columns
+
+	    		// ignore columns without headers as we cannot match them
+				if(header == null) {
 	    			continue;
 	    		}
+				
+				// use empty string for data-cells that have no value
+				if(value == null) {
+					value = "";
+				}
 	    		
 				replaced = replaced.replace("${" + header + "}", value);
 	    	}
