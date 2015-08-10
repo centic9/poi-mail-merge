@@ -27,9 +27,9 @@ dependencies {
 
 	compile 'org.apache.commons:commons-csv:1.1'
 
-	compile 'org.apache.poi:poi:3.12'
-	compile 'org.apache.poi:poi-ooxml:3.12'
-	compile 'org.apache.poi:poi-scratchpad:3.12'
+	compile 'org.apache.poi:poi:3.13-beta1'
+	compile 'org.apache.poi:poi-ooxml:3.13-beta1'
+	compile 'org.apache.poi:poi-scratchpad:3.13-beta1'
 
 	// for TestHelpers we need junit during normal compile...
 	compile "junit:junit:[4.12,)"
@@ -63,5 +63,5 @@ jacoco {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.4'
+	gradleVersion = '2.5'
 }
