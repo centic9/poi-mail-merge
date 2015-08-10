@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlException;
@@ -82,15 +83,15 @@ public class MailMerge {
 		
 		// now open the word file and apply the changes
 		try (InputStream is = new FileInputStream(wordTemplate)) {
-			XWPFDocument doc = new XWPFDocument(is);
-
-			// apply the lines and concatenate the results into the document
-			applyLines(doc, outputFile);
-		    
-		    log.info("Writing overall result to " + outputFile);
-			try (OutputStream out = new FileOutputStream(outputFile)) {
-		    	doc.write(out);
-		    }
+			try (XWPFDocument doc = new XWPFDocument(is)) {
+				// apply the lines and concatenate the results into the document
+				applyLines(doc, outputFile);
+			    
+			    log.info("Writing overall result to " + outputFile);
+				try (OutputStream out = new FileOutputStream(outputFile)) {
+			    	doc.write(out);
+			    }
+			}
 		}
 	}
 	
@@ -132,7 +133,7 @@ public class MailMerge {
 	}
 
 	private void readExcelFile(File excelFile) throws EncryptedDocumentException, InvalidFormatException, IOException {
-		try (Workbook wb = POIUtils.create(excelFile, true)) {
+		try (Workbook wb = WorkbookFactory.create(excelFile, null, true)) {
 			Sheet sheet = wb.getSheetAt(0);
 			if(sheet == null) {
 				throw new IllegalArgumentException("Provided Microsoft Excel file " + excelFile + " does not have any sheet");
