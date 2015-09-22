@@ -30,6 +30,13 @@ dependencies {
 	compile 'org.apache.poi:poi:3.13-beta1'
 	compile 'org.apache.poi:poi-ooxml:3.13-beta1'
 	compile 'org.apache.poi:poi-scratchpad:3.13-beta1'
+	/* For testing with latest pre-releases of POI:
+	compile files('/tmp/poi-3.13/ooxml-lib/xmlbeans-2.6.0.jar')
+	compile files('/tmp/poi-3.13/poi-3.13-20150929.jar')
+	compile files('/tmp/poi-3.13/poi-ooxml-3.13-20150929.jar')
+	compile files('/tmp/poi-3.13/poi-ooxml-schemas-3.13-20150929.jar')
+	compile files('/tmp/poi-3.13/poi-scratchpad-3.13-20150929.jar')
+	*/
 
 	// for TestHelpers we need junit during normal compile...
 	compile "junit:junit:[4.12,)"
