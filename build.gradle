@@ -5,7 +5,7 @@ apply plugin: 'application'
 
 mainClassName = "org.dstadler.poi.mailmerge.MailMerge"
 version = '1.0'
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -27,9 +27,9 @@ dependencies {
 
 	compile 'org.apache.commons:commons-csv:1.2'
 
-	compile 'org.apache.poi:poi:3.13-beta1'
-	compile 'org.apache.poi:poi-ooxml:3.13-beta1'
-	compile 'org.apache.poi:poi-scratchpad:3.13-beta1'
+	compile 'org.apache.poi:poi:3.13'
+	compile 'org.apache.poi:poi-ooxml:3.13'
+	compile 'org.apache.poi:poi-scratchpad:3.13'
 	/* For testing with latest pre-releases of POI:
 	compile files('/tmp/poi-3.13/ooxml-lib/xmlbeans-2.6.0.jar')
 	compile files('/tmp/poi-3.13/poi-3.13-20150929.jar')
@@ -66,7 +66,7 @@ test {
 }
 
 jacoco {
-	toolVersion = "0.7.4.201502262128"
+	toolVersion = "0.7.5.201505241946"
 }
 
 task wrapper(type: Wrapper) {
