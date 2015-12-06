@@ -37,9 +37,6 @@ dependencies {
 	compile files('/tmp/poi-3.13/poi-ooxml-schemas-3.13-20150929.jar')
 	compile files('/tmp/poi-3.13/poi-scratchpad-3.13-20150929.jar')
 	*/
-
-	// for TestHelpers we need junit during normal compile...
-	compile "junit:junit:[4.12,)"
 }
 
 // work around unnecessary timestamp in generated file which always causes dirty files in version control
