@@ -31,11 +31,11 @@ dependencies {
 	compile 'org.apache.poi:poi-ooxml:3.13'
 	compile 'org.apache.poi:poi-scratchpad:3.13'
 	/* For testing with latest pre-releases of POI:
-	compile files('/tmp/poi-3.13/ooxml-lib/xmlbeans-2.6.0.jar')
-	compile files('/tmp/poi-3.13/poi-3.13-20150929.jar')
-	compile files('/tmp/poi-3.13/poi-ooxml-3.13-20150929.jar')
-	compile files('/tmp/poi-3.13/poi-ooxml-schemas-3.13-20150929.jar')
-	compile files('/tmp/poi-3.13/poi-scratchpad-3.13-20150929.jar')
+	compile files('/tmp/poi-3.14-beta1/ooxml-lib/xmlbeans-2.6.0.jar')
+	compile files('/tmp/poi-3.14-beta1/poi-3.14-beta1-20151214.jar')
+	compile files('/tmp/poi-3.14-beta1/poi-ooxml-3.14-beta1-20151214.jar')
+	compile files('/tmp/poi-3.14-beta1/poi-ooxml-schemas-3.14-beta1-20151214.jar')
+	compile files('/tmp/poi-3.14-beta1/poi-scratchpad-3.14-beta1-20151214.jar')
 	*/
 }
 
