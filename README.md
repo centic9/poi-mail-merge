@@ -27,6 +27,18 @@ The result is a single merged Word-document which contains a copy of the templat
 
     ./run.sh <word-template> <excel/csv-file> <output-file>
 
+### Sample files
+
+There are some sample files in the directory `samples`, you can run these as follows
+
+    ./gradlew installDist
+	build\install\poi-mail-merge\bin\poi-mail-merge.bat samples\Template.docx samples\Lines.xlsx build\Result.docx
+
+on Unix you can use the following steps
+
+    ./gradlew installDist
+	./run.sh samples/Template.docx samples/Lines.xlsx build/Result.docx
+	
 ## Tips
 
 ### Convert to PDF
