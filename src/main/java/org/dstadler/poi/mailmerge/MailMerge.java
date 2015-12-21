@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,6 +18,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.format.CellFormat;
@@ -36,11 +38,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
  * Simple application which performs a "mail-merge" of a Microsoft Word template
  * document which contains replacement templates in the form of ${name}, ${first-name}, ...
  * and an Microsoft Excel spreadsheet which contains a list of entries that are merged in.
- * 
+ *
  * Call this application with parameters <word-template> <excel/csv-template> <output-file>
- * 
+ *
  * The resulting document has all resulting documents concatenated.
- * 
+ *
  * @author dominik.stadler
  *
  */
@@ -49,10 +51,10 @@ public class MailMerge {
 
 	private List<String> headers = new ArrayList<>();
 	private List<List<String>> values = new ArrayList<>();
-	
+
 	public static void main(String[] args) throws Exception {
 		LoggerFactory.initLogging();
-		
+
 		if(args.length != 3) {
 			throw new IllegalArgumentException("Usage: MailMerge <word-template> <excel/csv-template> <output-file>");
 		}
@@ -60,14 +62,14 @@ public class MailMerge {
 		File wordTemplate = new File(args[0]);
 		File excelFile = new File(args[1]);
 		String outputFile = args[2];
-		
+
 		if(!wordTemplate.exists() || !wordTemplate.isFile()) {
 			throw new IllegalArgumentException("Could not read Microsoft Word template " + wordTemplate);
 		}
 		if(!excelFile.exists() || !excelFile.isFile()) {
 			throw new IllegalArgumentException("Could not read data file " + excelFile);
 		}
-		
+
 		new MailMerge().merge(wordTemplate, excelFile, outputFile);
 	}
 
@@ -80,13 +82,15 @@ public class MailMerge {
 		} else {
 			readExcelFile(dataFile);
 		}
-		
+
+		removeEmptyLines();
+
 		// now open the word file and apply the changes
 		try (InputStream is = new FileInputStream(wordTemplate)) {
 			try (XWPFDocument doc = new XWPFDocument(is)) {
 				// apply the lines and concatenate the results into the document
 				applyLines(doc, outputFile);
-			    
+
 			    log.info("Writing overall result to " + outputFile);
 				try (OutputStream out = new FileOutputStream(outputFile)) {
 			    	doc.write(out);
@@ -94,7 +98,27 @@ public class MailMerge {
 			}
 		}
 	}
-	
+
+	private void removeEmptyLines() {
+		Iterator<List<String>> it = values.iterator();
+		while(it.hasNext()) {
+			List<String> line = it.next();
+			boolean empty = true;
+			for(String item : line) {
+				if(StringUtils.isNotBlank(item)) {
+					empty = false;
+					break;
+				}
+			}
+
+			// remove empty line
+			if(empty) {
+				log.info("Removing an empty data line");
+				it.remove();
+			}
+		}
+	}
+
 	private void readCSVFile(File csvFile) throws IOException {
 		// open file
 		// List<String> lines = FileUtils.readLines(file, null);
@@ -125,7 +149,7 @@ public class MailMerge {
 							data.add(line.get(pos));
 						}
 					}
-					
+
 					values.add(data);
 				}
 			}
@@ -138,7 +162,7 @@ public class MailMerge {
 			if(sheet == null) {
 				throw new IllegalArgumentException("Provided Microsoft Excel file " + excelFile + " does not have any sheet");
 			}
-	
+
 			final int start;
 			final int end;
 			{ // read headers
@@ -147,7 +171,7 @@ public class MailMerge {
 					throw new IllegalArgumentException("Provided Microsoft Excel file " + excelFile + " does not have data in the first row in the first sheet, "
 							+ "but we expect the header data to be located there");
 				}
-				
+
 				start = row.getFirstCellNum();
 				end = row.getLastCellNum();
 				for(int cellnum = start;cellnum <= end;cellnum++) {
@@ -163,19 +187,19 @@ public class MailMerge {
 					}
 				}
 			}
-	
+
 			for(int rownum = 1; rownum <= sheet.getLastRowNum();rownum++) {
 				Row row = sheet.getRow(rownum);
 				if(row == null) {
 					// ignore missing rows
 					continue;
 				}
-			
+
 				List<String> data = new ArrayList<>();
 				for(int colnum = start;colnum <= end;colnum++) {
-					Cell cell = row.getCell(colnum);  
+					Cell cell = row.getCell(colnum);
 					if(cell == null) {
-						// store null-data for empty/missing cells 
+						// store null-data for empty/missing cells
 						data.add(null);
 					} else {
 						final String value;
@@ -188,11 +212,11 @@ public class MailMerge {
 			            	// all others can use the default value from toString() for now.
 			            	value = cell.toString();
 				        }
-						
+
 						data.add(value);
 					}
 				}
-				
+
 				values.add(data);
 			}
 		}
@@ -207,7 +231,7 @@ public class MailMerge {
 
 	    // read the current full Body text
 	    String srcString = body.xmlText();
-	    
+
 	    // apply the replacements
 	    boolean first = true;
 	    for(List<String> data : values) {
@@ -222,27 +246,27 @@ public class MailMerge {
 				if(header == null) {
 	    			continue;
 	    		}
-				
+
 				// use empty string for data-cells that have no value
 				if(value == null) {
 					value = "";
 				}
-	    		
+
 				replaced = replaced.replace("${" + header + "}", value);
 	    	}
-		    
+
 			appendBody(body, replaced, first);
-			
+
 			first = false;
 	    }
 	}
-	
+
 	private static void appendBody(CTBody src, String append, boolean first) throws XmlException {
 	    XmlOptions optionsOuter = new XmlOptions();
 	    optionsOuter.setSaveOuter();
 	    String srcString = src.xmlText();
 	    String prefix = srcString.substring(0,srcString.indexOf(">")+1);
-	    
+
 	    final String mainPart;
 	    // exclude template itself in first appending
 	    if(first) {
