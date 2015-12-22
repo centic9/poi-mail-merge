@@ -1,4 +1,4 @@
-[![Build Status](https://buildhive.cloudbees.com/job/centic9/job/poi-mail-merge/badge/icon)](https://buildhive.cloudbees.com/job/centic9/job/poi-mail-merge/) 
+[![Build Status](https://travis-ci.org/centic9/poi-mail-merge.svg)](https://travis-ci.org/centic9/poi-mail-merge)
 
 This is a small application which allows to repeatedely replace markers in a Microsoft Word document with items taken from a CSV/Microsoft Excel file. 
 
