@@ -37,6 +37,8 @@ dependencies {
 	compile files('/tmp/poi-3.14-beta1/poi-ooxml-schemas-3.14-beta1-20151214.jar')
 	compile files('/tmp/poi-3.14-beta1/poi-scratchpad-3.14-beta1-20151214.jar')
 	*/
+	
+	testCompile "junit:junit:[4.12,)"
 }
 
 // work around unnecessary timestamp in generated file which always causes dirty files in version control
