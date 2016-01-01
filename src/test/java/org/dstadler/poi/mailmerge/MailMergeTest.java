@@ -15,7 +15,8 @@ public class MailMergeTest {
 		assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
 
 		// ensure the result file is not there
-		assertTrue(RESULT_FILE.exists() || RESULT_FILE.delete());
+		assertTrue("File should not exist or we should be able to delete it, exist: " + RESULT_FILE.exists(),
+				!RESULT_FILE.exists() || RESULT_FILE.delete());
 
 		// use sample files to run a full merge
 		MailMerge.main(new String[] {"samples/Template.docx", "samples/Lines.xlsx", RESULT_FILE.getPath()});
@@ -30,7 +31,8 @@ public class MailMergeTest {
 
 
 		// ensure the result file is not there
-		assertTrue(RESULT_FILE.exists() || RESULT_FILE.delete());
+		assertTrue("File should not exist or we should be able to delete it, exist: " + RESULT_FILE.exists(),
+				!RESULT_FILE.exists() || RESULT_FILE.delete());
 
 		// use sample files to run a full merge
 		MailMerge.main(new String[] {"samples/Template.docx", "samples/Lines.csv", RESULT_FILE.getPath()});
