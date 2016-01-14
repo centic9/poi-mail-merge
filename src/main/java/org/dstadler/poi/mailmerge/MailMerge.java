@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
@@ -104,6 +105,12 @@ public class MailMerge {
 
 				replaced = replaced.replace("${" + header + "}", value);
 	    	}
+
+			// check for missed replacements or formatting which interferes
+			if(replaced.contains("${")) {
+				log.warning("Still found template-marker after doing replacement: " +
+						StringUtils.abbreviate(StringUtils.substring(replaced, replaced.indexOf("${")), 200));
+			}
 
 			appendBody(body, replaced, first);
 
