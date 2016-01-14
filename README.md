@@ -59,6 +59,7 @@ If there are multiple formattings applied to a strings that holds a template-pat
 
 A workaround is to use the formatting tool in LibreOffice/OpenOfficeto ensure that the replacement tags have only one formatting applied to them. 
 
+See #6 for possible improvements.
 ## Change it
 
 ### Create Eclipse project files
