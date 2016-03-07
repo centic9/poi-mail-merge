@@ -27,9 +27,9 @@ dependencies {
 
 	compile 'org.apache.commons:commons-csv:1.2'
 
-	compile 'org.apache.poi:poi:3.14-beta1'
-	compile 'org.apache.poi:poi-ooxml:3.14-beta1'
-	compile 'org.apache.poi:poi-scratchpad:3.14-beta1'
+	compile 'org.apache.poi:poi:3.14'
+	compile 'org.apache.poi:poi-ooxml:3.14'
+	compile 'org.apache.poi:poi-scratchpad:3.14'
 	/* For testing with latest pre-releases of POI:
 	compile files('/tmp/poi-3.14-beta1/ooxml-lib/xmlbeans-2.6.0.jar')
 	compile files('/tmp/poi-3.14-beta1/poi-3.14-beta1-20151214.jar')
