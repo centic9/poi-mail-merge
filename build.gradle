@@ -3,7 +3,7 @@ apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'application'
 
-mainClassName = "org.dstadler.poi.mailmerge.MailMerge"
+mainClassName = 'org.dstadler.poi.mailmerge.MailMerge'
 version = '1.0'
 sourceCompatibility = 1.8
 
@@ -23,13 +23,13 @@ repositories {
 
 dependencies {
 	compile 'org.apache.commons:commons-lang3:3.4'
-	compile 'org.dstadler:commons-dost:1+'
+	compile 'org.dstadler:commons-dost:1.0.0.20'
 
-	compile 'org.apache.commons:commons-csv:1.2'
+	compile 'org.apache.commons:commons-csv:1.4'
 
-	compile 'org.apache.poi:poi:3.15-beta1'
-	compile 'org.apache.poi:poi-ooxml:3.15-beta1'
-	compile 'org.apache.poi:poi-scratchpad:3.15-beta1'
+	compile 'org.apache.poi:poi:3.15-beta2'
+	compile 'org.apache.poi:poi-ooxml:3.15-beta2'
+	compile 'org.apache.poi:poi-scratchpad:3.15-beta2'
 	/* For testing with latest pre-releases of POI:
 	compile files('/tmp/poi-3.14-beta1/ooxml-lib/xmlbeans-2.6.0.jar')
 	compile files('/tmp/poi-3.14-beta1/poi-3.14-beta1-20151214.jar')
@@ -38,7 +38,7 @@ dependencies {
 	compile files('/tmp/poi-3.14-beta1/poi-scratchpad-3.14-beta1-20151214.jar')
 	*/
 	
-	testCompile "junit:junit:[4.12,)"
+	testCompile 'junit:junit:[4.12,)'
 }
 
 // work around unnecessary timestamp in generated file which always causes dirty files in version control
@@ -84,5 +84,5 @@ test {
 }
 
 jacoco {
-	toolVersion = "0.7.5.201505241946"
+	toolVersion = '0.7.7.201606060606'
 }
