@@ -63,7 +63,7 @@ public class MailMerge {
 		try (InputStream is = new FileInputStream(wordTemplate)) {
 			try (XWPFDocument doc = new XWPFDocument(is)) {
 				// apply the lines and concatenate the results into the document
-				applyLines(data, doc, outputFile);
+				applyLines(data, doc);
 
 			    log.info("Writing overall result to " + outputFile);
 				try (OutputStream out = new FileOutputStream(outputFile)) {
@@ -73,7 +73,7 @@ public class MailMerge {
 		}
 	}
 
-	private void applyLines(Data dataIn, XWPFDocument doc, String outputFile) throws XmlException, IOException {
+	private void applyLines(Data dataIn, XWPFDocument doc) throws XmlException, IOException {
 	    CTBody body = doc.getDocument().getBody();
 
 	    XmlOptions optionsOuter = new XmlOptions();
