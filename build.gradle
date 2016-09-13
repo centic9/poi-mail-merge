@@ -32,11 +32,12 @@ dependencies {
     compile 'org.apache.poi:poi-ooxml:3.15-beta2'
     compile 'org.apache.poi:poi-scratchpad:3.15-beta2'
     /* For testing with latest pre-releases of POI:
-    compile files('C:/temp/poi-3.15/ooxml-lib/xmlbeans-2.6.0.jar')
-    compile files('C:/temp/poi-3.15/poi-3.15.jar')
-    compile files('C:/temp/poi-3.15/poi-ooxml-3.15.jar')
-    compile files('C:/temp/poi-3.15/poi-ooxml-schemas-3.15.jar')
-    compile files('C:/temp/poi-3.15/poi-scratchpad-3.15.jar')
+    compile files('C:/workspaces/poi/lib/commons-collections4-4.1.jar')
+    compile files('C:/workspaces/poi/ooxml-lib/xmlbeans-2.6.0.jar')
+    compile files('C:/temp/dist.apache.org/repos/dist/dev/poi/3.15-RC2/maven/poi/poi-3.15.jar')
+    compile files('C:/temp/dist.apache.org/repos/dist/dev/poi/3.15-RC2/maven/poi-ooxml/poi-ooxml-3.15.jar')
+    compile files('C:/temp/dist.apache.org/repos/dist/dev/poi/3.15-RC2/maven/poi-ooxml-schemas/poi-ooxml-schemas-3.15.jar')
+    compile files('C:/temp/dist.apache.org/repos/dist/dev/poi/3.15-RC2/maven/poi-scratchpad/poi-scratchpad-3.15.jar')
     */
     
     testCompile 'junit:junit:[4.12,)'
