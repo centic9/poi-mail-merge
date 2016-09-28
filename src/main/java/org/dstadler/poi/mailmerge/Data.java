@@ -105,9 +105,6 @@ public class Data {
     private void readExcelFile(File excelFile) throws EncryptedDocumentException, InvalidFormatException, IOException {
         try (Workbook wb = WorkbookFactory.create(excelFile, null, true)) {
             Sheet sheet = wb.getSheetAt(0);
-            if(sheet == null) {
-                throw new IllegalArgumentException("Provided Microsoft Excel file " + excelFile + " does not have any sheet");
-            }
 
             final int start;
             final int end;
@@ -149,8 +146,10 @@ public class Data {
                         data.add(null);
                     } else {
                         final String value;
+                        //noinspection deprecation
                         switch (cell.getCellType()) {
-                        case Cell.CELL_TYPE_NUMERIC:
+                            //noinspection deprecation
+                            case Cell.CELL_TYPE_NUMERIC:
                             // ensure that numeric are formatted the same way as in the Excel file.
                             value = CellFormat.getInstance(cell.getCellStyle().getDataFormatString()).apply(cell).text;
                             break;

@@ -4,8 +4,10 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -107,5 +109,31 @@ public class DataTest {
 		assertEquals(1, data.getData().size());
 		assertEquals("Had: " + data.getData().toString(),
 				"[[Value, null]]", data.getData().toString());
+	}
+
+	@Test
+	public void testReadExcelFileWithoutSheet() throws Exception {
+		Workbook wb = new XSSFWorkbook();
+
+		File file = File.createTempFile("MailMergeDataTest", ".xlsx");
+		try {
+			assertTrue(file.delete());
+			try (OutputStream stream = new FileOutputStream(file)) {
+				wb.write(stream);
+			}
+			assertTrue(file.exists());
+
+			Data data = new Data();
+
+			try {
+				data.read(file);
+				fail("Will fail without sheet in the workbook");
+			} catch (IllegalArgumentException e) {
+				// expected here
+				assertNotNull(e);
+			}
+		} finally {
+			assertTrue(!file.exists() || file.delete());
+		}
 	}
 }
