@@ -115,4 +115,25 @@ public class MailMergeTest {
 		// ensure the result file is written now
 		assertTrue(RESULT_FILE.exists());
 	}
+
+
+	@Test
+	public void testWithIncludeIndicator() throws Exception {
+		System.setProperty("org.dstadler.poi.mailmerge.includeindicator", "Include");
+		try {
+			assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
+
+			// ensure the result file is not there
+			assertTrue("File should not exist or we should be able to delete it, exist: " + RESULT_FILE.exists(),
+					!RESULT_FILE.exists() || RESULT_FILE.delete());
+
+			// use sample files to run a full merge
+			MailMerge.main(new String[]{"samples/Template.docx", "samples/Lines.xlsx", RESULT_FILE.getPath()});
+
+			// ensure the result file is written now
+			assertTrue(RESULT_FILE.exists());
+		} finally {
+			System.clearProperty("org.dstadler.poi.mailmerge.includeindicator");
+		}
+	}
 }

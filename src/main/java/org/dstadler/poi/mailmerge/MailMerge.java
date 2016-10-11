@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlException;
@@ -29,112 +30,129 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
  *
  */
 public class MailMerge {
-	private static final Logger log = LoggerFactory.make();
+    private static final Logger log = LoggerFactory.make();
 
-	public static void main(String[] args) throws Exception {
-		LoggerFactory.initLogging();
+    public static void main(String[] args) throws Exception {
+        LoggerFactory.initLogging();
 
-		if(args.length != 3) {
-			throw new IllegalArgumentException("Usage: MailMerge <word-template> <excel/csv-template> <output-file>");
-		}
+        if(args.length != 3) {
+            throw new IllegalArgumentException("Usage: MailMerge <word-template> <excel/csv-template> <output-file>");
+        }
 
-		File wordTemplate = new File(args[0]);
-		File excelFile = new File(args[1]);
-		String outputFile = args[2];
+        File wordTemplate = new File(args[0]);
+        File excelFile = new File(args[1]);
+        String outputFile = args[2];
 
-		if(!wordTemplate.exists() || !wordTemplate.isFile()) {
-			throw new IllegalArgumentException("Could not read Microsoft Word template " + wordTemplate);
-		}
-		if(!excelFile.exists() || !excelFile.isFile()) {
-			throw new IllegalArgumentException("Could not read data file " + excelFile);
-		}
+        if(!wordTemplate.exists() || !wordTemplate.isFile()) {
+            throw new IllegalArgumentException("Could not read Microsoft Word template " + wordTemplate);
+        }
+        if(!excelFile.exists() || !excelFile.isFile()) {
+            throw new IllegalArgumentException("Could not read data file " + excelFile);
+        }
 
-		new MailMerge().merge(wordTemplate, excelFile, outputFile);
-	}
+        new MailMerge().merge(wordTemplate, excelFile, outputFile);
+    }
 
-	private void merge(File wordTemplate, File dataFile, String outputFile) throws Exception {
-		log.info("Merging data from " + wordTemplate + " and " + dataFile + " into " + outputFile);
+    private void merge(File wordTemplate, File dataFile, String outputFile) throws Exception {
+        log.info("Merging data from " + wordTemplate + " and " + dataFile + " into " + outputFile);
 
-		// read the data-rows from the CSV or XLS(X) file
-		Data data = new Data();
-		data.read(dataFile);
+        // read the data-rows from the CSV or XLS(X) file
+        Data data = new Data();
+        data.read(dataFile);
 
-		// now open the word file and apply the changes
-		try (InputStream is = new FileInputStream(wordTemplate)) {
-			try (XWPFDocument doc = new XWPFDocument(is)) {
-				// apply the lines and concatenate the results into the document
-				applyLines(data, doc);
+        // now open the word file and apply the changes
+        try (InputStream is = new FileInputStream(wordTemplate)) {
+            try (XWPFDocument doc = new XWPFDocument(is)) {
+                // apply the lines and concatenate the results into the document
+                applyLines(data, doc);
 
-			    log.info("Writing overall result to " + outputFile);
-				try (OutputStream out = new FileOutputStream(outputFile)) {
-			    	doc.write(out);
-			    }
-			}
-		}
-	}
+                log.info("Writing overall result to " + outputFile);
+                try (OutputStream out = new FileOutputStream(outputFile)) {
+                    doc.write(out);
+                }
+            }
+        }
+    }
 
-	private void applyLines(Data dataIn, XWPFDocument doc) throws XmlException, IOException {
-	    CTBody body = doc.getDocument().getBody();
+    private void applyLines(Data dataIn, XWPFDocument doc) throws XmlException, IOException {
+        // small hack to not having to rework the commandline parsing just now
+        String includeIndicator = System.getProperty("org.dstadler.poi.mailmerge.includeindicator");
 
-	    XmlOptions optionsOuter = new XmlOptions();
-	    optionsOuter.setSaveOuter();
+        CTBody body = doc.getDocument().getBody();
 
-	    // read the current full Body text
-	    String srcString = body.xmlText();
+        XmlOptions optionsOuter = new XmlOptions();
+        optionsOuter.setSaveOuter();
 
-	    // apply the replacements
-	    boolean first = true;
-	    List<String> headers = dataIn.getHeaders();
-	    for(List<String> data : dataIn.getData()) {
-	    	log.info("Applying to template: " + data);
+        // read the current full Body text
+        String srcString = body.xmlText();
 
-	    	String replaced = srcString;
-			for(int fieldNr = 0;fieldNr < headers.size();fieldNr++) {
-	    		String header = headers.get(fieldNr);
-	    		String value = data.get(fieldNr);
+        // apply the replacements
+        boolean first = true;
+        List<String> headers = dataIn.getHeaders();
+        for(List<String> data : dataIn.getData()) {
+            log.info("Applying to template: " + data);
 
-	    		// ignore columns without headers as we cannot match them
-				if(header == null) {
-	    			continue;
-	    		}
+            // if the special option is set ignore lines which do not have the indicator set
+            if(includeIndicator != null) {
+                int indicatorPos = headers.indexOf(includeIndicator);
+                Preconditions.checkState(indicatorPos >= 0,
+                        "An include-indicator is set via system properties as %s, but there is no such column, had: %s",
+                        includeIndicator, headers);
 
-				// use empty string for data-cells that have no value
-				if(value == null) {
-					value = "";
-				}
+                if(!(data.get(indicatorPos).equals("1") ||
+                                data.get(indicatorPos).equalsIgnoreCase("true"))) {
+                    log.info("Skipping line " + data + " because include-indicator was not set");
+                    continue;
+                }
+            }
 
-				replaced = replaced.replace("${" + header + "}", value);
-	    	}
+            String replaced = srcString;
+            for(int fieldNr = 0;fieldNr < headers.size();fieldNr++) {
+                String header = headers.get(fieldNr);
+                String value = data.get(fieldNr);
 
-			// check for missed replacements or formatting which interferes
-			if(replaced.contains("${")) {
-				log.warning("Still found template-marker after doing replacement: " +
-						StringUtils.abbreviate(StringUtils.substring(replaced, replaced.indexOf("${")), 200));
-			}
+                // ignore columns without headers as we cannot match them
+                if(header == null) {
+                    continue;
+                }
 
-			appendBody(body, replaced, first);
+                // use empty string for data-cells that have no value
+                if(value == null) {
+                    value = "";
+                }
 
-			first = false;
-	    }
-	}
+                replaced = replaced.replace("${" + header + "}", value);
+            }
 
-	private static void appendBody(CTBody src, String append, boolean first) throws XmlException {
-	    XmlOptions optionsOuter = new XmlOptions();
-	    optionsOuter.setSaveOuter();
-	    String srcString = src.xmlText();
-	    String prefix = srcString.substring(0,srcString.indexOf(">")+1);
+            // check for missed replacements or formatting which interferes
+            if(replaced.contains("${")) {
+                log.warning("Still found template-marker after doing replacement: " +
+                        StringUtils.abbreviate(StringUtils.substring(replaced, replaced.indexOf("${")), 200));
+            }
 
-	    final String mainPart;
-	    // exclude template itself in first appending
-	    if(first) {
-	    	mainPart = "";
-	    } else {
-	    	mainPart = srcString.substring(srcString.indexOf(">")+1,srcString.lastIndexOf("<"));
-	    }
+            appendBody(body, replaced, first);
 
-	    String sufix = srcString.substring( srcString.lastIndexOf("<") );
-	    String addPart = append.substring(append.indexOf(">") + 1, append.lastIndexOf("<"));
-	    CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+addPart+sufix);
-	    src.set(makeBody);
-	}
+            first = false;
+        }
+    }
+
+    private static void appendBody(CTBody src, String append, boolean first) throws XmlException {
+        XmlOptions optionsOuter = new XmlOptions();
+        optionsOuter.setSaveOuter();
+        String srcString = src.xmlText();
+        String prefix = srcString.substring(0,srcString.indexOf(">")+1);
+
+        final String mainPart;
+        // exclude template itself in first appending
+        if(first) {
+            mainPart = "";
+        } else {
+            mainPart = srcString.substring(srcString.indexOf(">")+1,srcString.lastIndexOf("<"));
+        }
+
+        String sufix = srcString.substring( srcString.lastIndexOf("<") );
+        String addPart = append.substring(append.indexOf(">") + 1, append.lastIndexOf("<"));
+        CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+addPart+sufix);
+        src.set(makeBody);
+    }
 }
