@@ -32,26 +32,26 @@ The result is a single merged Word-document which contains a copy of the templat
 There are some sample files in the directory `samples`, you can run these as follows
 
     ./gradlew installDist
-	build\install\poi-mail-merge\bin\poi-mail-merge.bat samples\Template.docx samples\Lines.xlsx build\Result.docx
+    build\install\poi-mail-merge\bin\poi-mail-merge.bat samples\Template.docx samples\Lines.xlsx build\Result.docx
 
 on Unix you can use the following steps
 
     ./gradlew installDist
-	./run.sh samples/Template.docx samples/Lines.xlsx build/Result.docx
+    ./run.sh samples/Template.docx samples/Lines.xlsx build/Result.docx
 	
 ## Tips
 
 ### Convert to PDF
 
-You can use the too ```unoconv``` to further convert the resulting docx, e.g. to PDF:
+You can use the tool ```unoconv``` from OpenOffice/LibreOffice to further convert the resulting docx, e.g. to PDF:
 
     unoconv -vvv --timeout=10 --doctype=document --output=result.pdf result.docx
 
 ## Known issues
 
-### Only one CSV format supported
+### Only XLS/XLSX and one CSV format supported
 
-Currently only CSV files which use comma as delimiter and double-quotes for quoting text are supported. Other formats required code-changes, but should be easy to to by adjusting the CSFFormat definition (it uses add as it uses http://commons.apache.org/proper/commons-csv/ for CSV handling).
+For CSV, currently only files which use comma as delimiter and double-quotes for quoting text are supported. Other formats require code-changes, but should be easy to do by adjusting the CSFFormat definition (as it uses http://commons.apache.org/proper/commons-csv/ for CSV handling).
 
 ### Word-Formatting can confuse the replacement
 
@@ -60,6 +60,7 @@ If there are multiple formattings applied to a strings that holds a template-pat
 A workaround is to use the formatting tool in LibreOffice/OpenOfficeto ensure that the replacement tags have only one formatting applied to them. 
 
 See #6 for possible improvements.
+
 ## Change it
 
 ### Create Eclipse project files
