@@ -1,19 +1,17 @@
 package org.dstadler.poi.mailmerge;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+
+import static org.junit.Assert.*;
 
 public class DataTest {
 	private static final File EMPTY_XLSX = new File("build/Empty.xlsx");
