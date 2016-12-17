@@ -45,7 +45,7 @@ on Unix you can use the following steps
 
 You can use the tool ```unoconv``` from OpenOffice/LibreOffice to further convert the resulting docx, e.g. to PDF:
 
-    unoconv -vvv --timeout=10 --doctype=document --output=result.pdf result.docx
+    unoconv -vvv --timeout=60 --doctype=document --output=result.pdf result.docx
 
 ## Known issues
 
