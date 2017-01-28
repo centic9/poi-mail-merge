@@ -147,9 +147,9 @@ public class Data {
                     } else {
                         final String value;
                         //noinspection deprecation
-                        switch (cell.getCellType()) {
+                        switch (cell.getCellTypeEnum()) {
                             //noinspection deprecation
-                            case Cell.CELL_TYPE_NUMERIC:
+                            case NUMERIC:
                             // ensure that numeric are formatted the same way as in the Excel file.
                             value = CellFormat.getInstance(cell.getCellStyle().getDataFormatString()).apply(cell).text;
                             break;

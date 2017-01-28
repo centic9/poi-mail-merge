@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.dstadler:commons-dost:1.0.0.20'
 
     compile 'org.apache.commons:commons-csv:1.4'
@@ -32,15 +32,15 @@ dependencies {
     compile 'org.apache.poi:poi-ooxml:3.16-beta1'
     compile 'org.apache.poi:poi-scratchpad:3.16-beta1'
     /* For testing with latest pre-releases of POI:
-    compile files('C:/workspaces/poi/lib/commons-collections4-4.1.jar')
-    compile files('C:/workspaces/poi/ooxml-lib/xmlbeans-2.6.0.jar')
-    compile files('C:/temp/dist.apache.org/repos/dist/dev/poi/3.15-RC2/maven/poi/poi-3.15.jar')
-    compile files('C:/temp/dist.apache.org/repos/dist/dev/poi/3.15-RC2/maven/poi-ooxml/poi-ooxml-3.15.jar')
-    compile files('C:/temp/dist.apache.org/repos/dist/dev/poi/3.15-RC2/maven/poi-ooxml-schemas/poi-ooxml-schemas-3.15.jar')
-    compile files('C:/temp/dist.apache.org/repos/dist/dev/poi/3.15-RC2/maven/poi-scratchpad/poi-scratchpad-3.15.jar')
+    compile files('/opt/poi/lib/commons-collections4-4.1.jar')
+    compile files('/opt/poi/ooxml-lib/xmlbeans-2.6.0.jar')
+    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/3.16-beta2-RC1/maven/poi/poi-3.16-beta2.jar')
+    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/3.16-beta2-RC1/maven/poi-ooxml/poi-ooxml-3.16-beta2.jar')
+    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/3.16-beta2-RC1/maven/poi-ooxml-schemas/poi-ooxml-schemas-3.16-beta2.jar')
+    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/3.16-beta2-RC1/maven/poi-scratchpad/poi-scratchpad-3.16-beta2.jar')
     */
     
-    testCompile 'junit:junit:[4.12,)'
+    testCompile 'junit:junit:4.12'
 }
 
 // work around unnecessary timestamp in generated file which always causes dirty files in version control
@@ -53,7 +53,7 @@ task adjustEclipseSettingsFile << {
 task sortEclipseSettingsFile << {
     new File(project.projectDir, '.settings/org.eclipse.jdt.core.prefs').with { it.text = it.readLines().findAll { it }.sort().join('\n') }
     new File(project.projectDir, '.classpath').with { it.text = it.readLines().findAll { it }.unique().join('\n') }
-    File file = new File(project.projectDir, '.settings/com.google.gdt.eclipse.core.prefs');
+    File file = new File(project.projectDir, '.settings/com.google.gdt.eclipse.core.prefs')
     if(file.exists()) {
         file.with { it.text = it.readLines().findAll { it }.sort().join('\n') }
     }
@@ -63,7 +63,7 @@ eclipseJdt.finalizedBy adjustEclipseSettingsFile
 eclipseJdt.finalizedBy sortEclipseSettingsFile
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14'
+    gradleVersion = '2.14.1'
 }
 
 task adjustWrapperPropertiesFile << {
@@ -86,5 +86,5 @@ test {
 }
 
 jacoco {
-    toolVersion = '0.7.7.201606060606'
+    toolVersion = '0.7.8'
 }
