@@ -26,14 +26,26 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellReference;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 
+/**
+ * Helper class which handles reading the merge-file-data from
+ * either a CSV or XLS/XLSX file.
+ */
 public class Data {
     private static final Logger log = LoggerFactory.make();
 
     private List<String> headers = new ArrayList<>();
     private List<List<String>> values = new ArrayList<>();
 
+    /**
+     * Read the given file either as .csv or .xls/.xlsx file, depending
+     * on the file-extension.
+     *
+     * @param dataFile The merge-file to read. Can have extension .csv, .xls or .xlsx
+     * @throws IOException If an error occurs while reading the file
+     * @throws EncryptedDocumentException If the document is encrypted (passwords are not supported currently)
+     * @throws InvalidFormatException If the .xls/.xlsx file cannot be read due to a file-format error
+     */
     public void read(File dataFile) throws IOException, EncryptedDocumentException, InvalidFormatException {
-
         // read the lines from the data-file
         if(FilenameUtils.getExtension(dataFile.getName()).equalsIgnoreCase("csv")) {
             readCSVFile(dataFile);
@@ -43,7 +55,6 @@ public class Data {
 
         removeEmptyLines();
     }
-
 
     private void removeEmptyLines() {
         Iterator<List<String>> it = values.iterator();
@@ -117,30 +128,30 @@ public class Data {
 
                 start = row.getFirstCellNum();
                 end = row.getLastCellNum();
-                for(int cellnum = start;cellnum <= end;cellnum++) {
-                    Cell cell = row.getCell(cellnum);
+                for(int cellNum = start;cellNum <= end;cellNum++) {
+                    Cell cell = row.getCell(cellNum);
                     if(cell == null) {
                         // add null to the headers if there are columns without title in the sheet
                         headers.add(null);
-                        log.info("Had empty header for column " + CellReference.convertNumToColString(cellnum));
+                        log.info("Had empty header for column " + CellReference.convertNumToColString(cellNum));
                     } else {
                         String value = cell.toString();
                         headers.add(value);
-                        log.info("Had header '" + value + "' for column " + CellReference.convertNumToColString(cellnum));
+                        log.info("Had header '" + value + "' for column " + CellReference.convertNumToColString(cellNum));
                     }
                 }
             }
 
-            for(int rownum = 1; rownum <= sheet.getLastRowNum();rownum++) {
-                Row row = sheet.getRow(rownum);
+            for(int rowNum = 1; rowNum <= sheet.getLastRowNum();rowNum++) {
+                Row row = sheet.getRow(rowNum);
                 if(row == null) {
                     // ignore missing rows
                     continue;
                 }
 
                 List<String> data = new ArrayList<>();
-                for(int colnum = start;colnum <= end;colnum++) {
-                    Cell cell = row.getCell(colnum);
+                for(int colNum = start;colNum <= end;colNum++) {
+                    Cell cell = row.getCell(colNum);
                     if(cell == null) {
                         // store null-data for empty/missing cells
                         data.add(null);
@@ -167,12 +178,20 @@ public class Data {
         }
     }
 
-
+    /**
+     * Return a list of rows containing the data-values.
+     *
+     * @return a list of rows, each containing a list of data-values as strings.
+     */
     public List<List<String>> getData() {
         return values;
     }
 
-
+    /**
+     * A list of header-names that are used to replace the templates.
+     *
+     * @return The header-names as found in the .csv/.xls/.xlsx file.
+     */
     public List<String> getHeaders() {
         return headers;
     }

@@ -25,9 +25,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
  * Call this application with parameters <word-template> <excel/csv-template> <output-file>
  *
  * The resulting document has all resulting documents concatenated.
- *
- * @author dominik.stadler
- *
  */
 public class MailMerge {
     private static final Logger log = LoggerFactory.make();
@@ -150,9 +147,9 @@ public class MailMerge {
             mainPart = srcString.substring(srcString.indexOf(">")+1,srcString.lastIndexOf("<"));
         }
 
-        String sufix = srcString.substring( srcString.lastIndexOf("<") );
+        String suffix = srcString.substring( srcString.lastIndexOf("<") );
         String addPart = append.substring(append.indexOf(">") + 1, append.lastIndexOf("<"));
-        CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+addPart+sufix);
+        CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+addPart+suffix);
         src.set(makeBody);
     }
 }
