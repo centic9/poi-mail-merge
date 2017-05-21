@@ -78,7 +78,6 @@ public class Data {
 
     private void readCSVFile(File csvFile) throws IOException {
         // open file
-        // List<String> lines = FileUtils.readLines(file, null);
         try (Reader reader = new FileReader(csvFile)) {
             CSVFormat strategy = CSVFormat.DEFAULT.
                     withHeader().

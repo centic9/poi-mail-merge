@@ -77,19 +77,16 @@ public class MailMerge {
 
         CTBody body = doc.getDocument().getBody();
 
-        XmlOptions optionsOuter = new XmlOptions();
-        optionsOuter.setSaveOuter();
-
         // read the current full Body text
         String srcString = body.xmlText();
 
-        // apply the replacements
+        // apply the replacements line-by-line
         boolean first = true;
         List<String> headers = dataIn.getHeaders();
         for(List<String> data : dataIn.getData()) {
             log.info("Applying to template: " + data);
 
-            // if the special option is set ignore lines which do not have the indicator set
+            // if the option is set ignore lines which do not have the indicator set
             if(includeIndicator != null) {
                 int indicatorPos = headers.indexOf(includeIndicator);
                 Preconditions.checkState(indicatorPos >= 0,
