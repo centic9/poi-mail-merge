@@ -23,14 +23,14 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'org.dstadler:commons-dost:1.0.0.22'
+    compile 'org.apache.commons:commons-lang3:3.6'
+    compile 'org.dstadler:commons-dost:1.0.0.23'
     compile 'com.google.guava:guava:21.0'
     compile 'org.apache.commons:commons-csv:1.4'
 
-    compile 'org.apache.poi:poi:3.16-beta2'
-    compile 'org.apache.poi:poi-ooxml:3.16'
-    compile 'org.apache.poi:poi-scratchpad:3.16'
+    compile 'org.apache.poi:poi:3.17-beta1'
+    compile 'org.apache.poi:poi-ooxml:3.17-beta1'
+    compile 'org.apache.poi:poi-scratchpad:3.17-beta1'
     /* For testing with latest pre-releases of POI:
     compile files('/opt/poi/lib/commons-collections4-4.1.jar')
     compile files('/opt/poi/ooxml-lib/xmlbeans-2.6.0.jar')
