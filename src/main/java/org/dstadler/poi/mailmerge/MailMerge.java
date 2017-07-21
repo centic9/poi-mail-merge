@@ -93,8 +93,7 @@ public class MailMerge {
                         "An include-indicator is set via system properties as %s, but there is no such column, had: %s",
                         includeIndicator, headers);
 
-                if(!(data.get(indicatorPos).equals("1") ||
-                                data.get(indicatorPos).equalsIgnoreCase("true"))) {
+                if(!("1".equals(data.get(indicatorPos))) || !("true".equalsIgnoreCase(data.get(indicatorPos)))) {
                     log.info("Skipping line " + data + " because include-indicator was not set");
                     continue;
                 }

@@ -21,9 +21,8 @@ public class DataTest {
 		Data data = new Data();
 		data.read(new File("samples/Lines.xlsx"));
 
-		assertEquals("Had: " + data.getHeaders().toString(),
-				"[Name, Organisation, Address, Zip, City, Salutation, Include, , , , , , , , , , , null]", data.getHeaders().toString());
-		assertEquals(3, data.getData().size());
+		assertEquals("[Name, Organisation, Address, Zip, City, Salutation, Include, , , , , , , , , , , null]", data.getHeaders().toString());
+		assertEquals(4, data.getData().size());
 	}
 
 	@Test
@@ -31,8 +30,7 @@ public class DataTest {
 		Data data = new Data();
 		data.read(new File("samples/Lines.csv"));
 
-		assertEquals("Had: " + data.getHeaders().toString(),
-				"[Name, Organisation, Address, Zip, City, Salutation, ]", data.getHeaders().toString());
+		assertEquals("[Name, Organisation, Address, Zip, City, Salutation, ]", data.getHeaders().toString());
 		assertEquals(3, data.getData().size());
 	}
 
