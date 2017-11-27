@@ -21,7 +21,7 @@ public class DataTest {
 		Data data = new Data();
 		data.read(new File("samples/Lines.xlsx"));
 
-		assertEquals("[Name, Organisation, Address, Zip, City, Salutation, Include, , , , , , , , , , , null]", data.getHeaders().toString());
+		assertEquals("[Name, Organisation, Address, Zip, City, Salutation, Include, Date, , , , , , , , , , null]", data.getHeaders().toString());
 		assertEquals(4, data.getData().size());
 	}
 

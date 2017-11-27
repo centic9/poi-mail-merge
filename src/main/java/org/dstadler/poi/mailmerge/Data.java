@@ -160,12 +160,12 @@ public class Data {
                         switch (cell.getCellTypeEnum()) {
                             //noinspection deprecation
                             case NUMERIC:
-                            // ensure that numeric are formatted the same way as in the Excel file.
-                            value = CellFormat.getInstance(cell.getCellStyle().getDataFormatString()).apply(cell).text;
-                            break;
-                        default:
-                            // all others can use the default value from toString() for now.
-                            value = cell.toString();
+                                // ensure that numeric are formatted the same way as in the Excel file.
+                                value = CellFormat.getInstance(cell.getCellStyle().getDataFormatString()).apply(cell).text;
+                                break;
+                            default:
+                                // all others can use the default value from toString() for now.
+                                value = cell.toString();
                         }
 
                         data.add(value);
