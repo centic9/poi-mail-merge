@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.commons:commons-lang3:3.6'
+    compile 'org.apache.commons:commons-lang3:3.7'
     compile 'org.dstadler:commons-dost:1.0.0.23'
     compile 'com.google.guava:guava:21.0'
     compile 'org.apache.commons:commons-csv:1.5'
@@ -86,5 +86,5 @@ test {
 }
 
 jacoco {
-    toolVersion = '0.7.8'
+    toolVersion = '0.7.9'
 }
