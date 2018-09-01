@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'application'
 
@@ -23,55 +22,38 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.commons:commons-lang3:3.7'
-    compile 'org.dstadler:commons-dost:1.0.0.23'
+    compile 'org.apache.commons:commons-lang3:3.8'
+    compile 'org.dstadler:commons-dost:1.0.0.26'
     compile 'com.google.guava:guava:21.0'
     compile 'org.apache.commons:commons-csv:1.5'
 
     compile 'org.apache.poi:poi:3.17'
     compile 'org.apache.poi:poi-ooxml:3.17'
     compile 'org.apache.poi:poi-scratchpad:3.17'
-    /* For testing with latest pre-releases of POI:
-    compile files('/opt/poi/lib/commons-collections4-4.1.jar')
-    compile files('/opt/poi/ooxml-lib/xmlbeans-2.6.0.jar')
-    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/3.16-RC1/maven/poi/poi-3.16.jar')
-    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/3.16-RC1/maven/poi-ooxml/poi-ooxml-3.16.jar')
-    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/3.16-RC1/maven/poi-ooxml-schemas/poi-ooxml-schemas-3.16.jar')
-    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/3.16-RC1/maven/poi-scratchpad/poi-scratchpad-3.16.jar')
-    */
-    
+    /*compile files('/opt/poi/lib/commons-collections4-4.2.jar')
+    compile files('/opt/poi/lib/commons-compress-1.18.jar')
+    compile files('/opt/poi/lib/commons-math3-3.6.1.jar')
+    compile files('/opt/poi/ooxml-lib/xmlbeans-3.0.1.jar')
+    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.0.0-RC1/maven/poi/poi-4.0.0.jar')
+    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.0.0-RC1/maven/poi-ooxml/poi-ooxml-4.0.0.jar')
+    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.0.0-RC1/maven/poi-ooxml-schemas/poi-ooxml-schemas-4.0.0.jar')
+    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.0.0-RC1/maven/poi-ooxml-schemas/poi-scratchpad-4.0.0.jar')*/
+
     testCompile 'junit:junit:4.12'
 }
 
-// work around unnecessary timestamp in generated file which always causes dirty files in version control
-// https://issues.gradle.org/browse/GRADLE-2293
-task adjustEclipseSettingsFile << {
-    ant.replaceregexp(match:'^#.*', replace:'', flags:'g', byline:true) {
-        fileset(dir: project.projectDir, includes: '.settings/org.eclipse.jdt.core.prefs,.settings/com.google.gdt.eclipse.core.prefs')
-    }
-}
-task sortEclipseSettingsFile << {
-    new File(project.projectDir, '.settings/org.eclipse.jdt.core.prefs').with { it.text = it.readLines().findAll { it }.sort().join('\n') }
-    new File(project.projectDir, '.classpath').with { it.text = it.readLines().findAll { it }.unique().join('\n') }
-    File file = new File(project.projectDir, '.settings/com.google.gdt.eclipse.core.prefs')
-    if(file.exists()) {
-        file.with { it.text = it.readLines().findAll { it }.sort().join('\n') }
-    }
-    ant.fixcrlf(srcDir: '.settings', eol: 'lf')
-}
-eclipseJdt.finalizedBy adjustEclipseSettingsFile
-eclipseJdt.finalizedBy sortEclipseSettingsFile
-
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.4.1'
+    gradleVersion = '4.6'
 }
 
-task adjustWrapperPropertiesFile << {
-    ant.replaceregexp(match:'^#.*', replace:'', flags:'g', byline:true) {
-        fileset(dir: project.projectDir, includes: 'gradle/wrapper/gradle-wrapper.properties')
-    }
-    new File(project.projectDir, 'gradle/wrapper/gradle-wrapper.properties').with { it.text = it.readLines().findAll { it }.sort().join('\n') }
-    ant.fixcrlf(file: 'gradle/wrapper/gradle-wrapper.properties', eol: 'lf')
+task adjustWrapperPropertiesFile {
+	doLast {
+		ant.replaceregexp(match:'^#.*', replace:'', flags:'g', byline:true) {
+			fileset(dir: project.projectDir, includes: 'gradle/wrapper/gradle-wrapper.properties')
+		}
+		new File(project.projectDir, 'gradle/wrapper/gradle-wrapper.properties').with { it.text = it.readLines().findAll { it }.sort().join('\n') }
+		ant.fixcrlf(file: 'gradle/wrapper/gradle-wrapper.properties', eol: 'lf')
+	}
 }
 wrapper.finalizedBy adjustWrapperPropertiesFile
 
@@ -86,5 +68,5 @@ test {
 }
 
 jacoco {
-    toolVersion = '0.7.9'
+    toolVersion = '0.8.2'
 }
