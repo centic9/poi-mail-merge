@@ -42,8 +42,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+wrapper {
+    gradleVersion = '4.10.3'
 }
 
 task adjustWrapperPropertiesFile {
