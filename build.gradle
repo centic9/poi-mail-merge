@@ -23,13 +23,13 @@ repositories {
 
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.9'
-    compile 'org.dstadler:commons-dost:1.0.0.27'
+    compile 'org.dstadler:commons-dost:1.0.0.30'
     compile 'com.google.guava:guava:27.1-jre'
     compile 'org.apache.commons:commons-csv:1.7'
 
-    compile 'org.apache.poi:poi:4.1.0'
-    compile 'org.apache.poi:poi-ooxml:4.1.0'
-    compile 'org.apache.poi:poi-scratchpad:4.1.0'
+    compile 'org.apache.poi:poi:4.1.1'
+    compile 'org.apache.poi:poi-ooxml:4.1.1'
+    compile 'org.apache.poi:poi-scratchpad:4.1.1'
     /*compile files('/opt/poi/lib/commons-collections4-4.2.jar')
     compile files('/opt/poi/lib/commons-compress-1.18.jar')
     compile files('/opt/poi/lib/commons-math3-3.6.1.jar')
@@ -70,5 +70,5 @@ test {
 }
 
 jacoco {
-    toolVersion = '0.8.3'
+    toolVersion = '0.8.5'
 }
