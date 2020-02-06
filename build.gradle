@@ -39,11 +39,11 @@ dependencies {
     compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.1.0-RC1/maven/poi-ooxml-schemas/poi-ooxml-schemas-4.1.0.jar')
     compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.1.0-RC1/maven/poi-ooxml-schemas/poi-scratchpad-4.1.0.jar')*/
 
-    testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.13'
 }
 
 wrapper {
-    gradleVersion = '4.10.3'
+    gradleVersion = '5.6.4'
 }
 
 task adjustWrapperPropertiesFile {
