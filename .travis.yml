@@ -1,14 +1,16 @@
-# Use trusty to still have JDK 8 available
-dist: trusty
+dist: bionic
 language: java
 jdk:
-  - oraclejdk8
-  - oraclejdk11
-# not available yet  - openjdk11
- 
+  - openjdk8
+  - openjdk11
+
 before_install:
- - chmod +x gradlew
-  
+ - chmod +x gradlew gradle/wrapper/gradle-wrapper.jar
+
+install: 
+- gradle wrapper
+- ./gradlew checkSnapshotDependencies compileJava
+
 after_success:
 - ./gradlew jacocoTestReport
 
