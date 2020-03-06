@@ -9,7 +9,9 @@ before_install:
 
 install: 
 - gradle wrapper
-- ./gradlew checkSnapshotDependencies compileJava
+- ./gradlew compileJava
+
+script: ./gradlew check
 
 after_success:
 - ./gradlew jacocoTestReport
