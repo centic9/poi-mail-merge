@@ -30,7 +30,7 @@ public class DataTest {
 		Data data = new Data();
 		data.read(new File("samples/Lines.csv"));
 
-		assertEquals("[Name, Organisation, Address, Zip, City, Salutation, ]", data.getHeaders().toString());
+		assertEquals("[Name, Organisation, Address, Zip, City, Salutation]", data.getHeaders().toString());
 		assertEquals(3, data.getData().size());
 	}
 
