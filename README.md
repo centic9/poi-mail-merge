@@ -11,18 +11,21 @@ also does not need re-configuration each time the mail-merge is (re-)run.
 
 ## How it works
 
-All you need is a Word-Document in Excel >= 2003 format (.docx) which acts 
+All you need is a Word-Document in "docx" format (>= 2003) which acts 
 as template and an Excel .xls/.xlsx or CSV file which contains one row for 
-each time the template should be populated.
+each time the template-document should be produced.
 
 The word-document can contain template-markers (enclosed in ${...}) for 
 things that should be replaced, e.g. "${first-name} ${last-name}".
 
-The first sheet of the Excel/CSV file is read as a header-row which is 
-used to match the template-names used in the Word-template.
+The first row of the first sheet of the Excel/CSV file is read as a 
+header-row which is used to match the template-names used in the 
+Word-template.
 
-The result is a single merged Word-document which contains a copy of the 
-template for each line in the Excel file.
+Only the first sheet of Excel files are read.
+
+The result is a single merged Word-document which contains a replaced 
+copy of the template for each line in the Excel file.
 
 ## Use it
 
@@ -69,7 +72,7 @@ in the second row.
 For CSV, currently only files which use comma as delimiter and double-quotes 
 for quoting text are supported. Other formats require code-changes, but should 
 be easy to do by adjusting the CSFFormat definition (this project uses 
-http://commons.apache.org/proper/commons-csv/ for CSV handling).
+[Apache Commons CSV](http://commons.apache.org/proper/commons-csv/) for CSV handling).
 
 ### Only DOCX template format supported
  
@@ -82,8 +85,8 @@ The resulting output file is fully held in memory, so a very large number of
 merged documents may cause very high memory usage and/or out-of-memory errors.
 
 A streaming writing is currently not easy to support, but it should be possible
-to add a mode of operation which writes separate files the merged documents to
-overcome this limitation if necessary. Pull-requests highly welcome!
+to add a mode of operation which writes separate files for the merged documents 
+to overcome this limitation if necessary. Pull-requests highly welcome!
 
 ### Word-Formatting can confuse the replacement
 
@@ -95,7 +98,7 @@ and thus might prevent the replacement from happening.
 A workaround is to use the formatting tool in LibreOffice/OpenOffice to ensure 
 that the replacement tags have only one formatting applied to them. 
 
-See #6 for possible improvements.
+See centic9/poi-mail-merge#6 for possible improvements.
 
 ## Change it
 
