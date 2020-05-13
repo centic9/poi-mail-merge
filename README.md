@@ -115,4 +115,4 @@ See centic9/poi-mail-merge#6 for possible improvements.
 
 * poi-mail-merge is licensed under the [BSD 2-Clause License].
 
-[BSD 2-Clause License]: http://www.opensource.org/licenses/bsd-license.php
+[BSD 2-Clause License]: https://www.opensource.org/licenses/bsd-license.php
