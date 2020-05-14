@@ -52,6 +52,10 @@ on Unix you can use the following steps
     ./gradlew installDist
     ./run.sh samples/Template.docx samples/Lines.xlsx build/Result.docx
 	
+## Support this project
+
+If you find this tool useful and would like to support my work on it, you can [Sponsor the author](https://github.com/sponsors/centic9)
+
 ## Tips
 
 ### Convert to PDF
