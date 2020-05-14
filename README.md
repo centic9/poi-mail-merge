@@ -54,7 +54,7 @@ on Unix you can use the following steps
 	
 ## Support this project
 
-If you find this tool useful and would like to support my work on it, you can [Sponsor the author](https://github.com/sponsors/centic9)
+If you find this tool useful and would like to support work on it, you can [Sponsor the author](https://github.com/sponsors/centic9)
 
 ## Tips
 
