@@ -30,14 +30,14 @@ dependencies {
     compile 'org.apache.poi:poi:4.1.2'
     compile 'org.apache.poi:poi-ooxml:4.1.2'
     compile 'org.apache.poi:poi-scratchpad:4.1.2'
-    /*compile files('/opt/poi/lib/commons-collections4-4.2.jar')
-    compile files('/opt/poi/lib/commons-compress-1.18.jar')
-    compile files('/opt/poi/lib/commons-math3-3.6.1.jar')
-    compile files('/opt/poi/ooxml-lib/xmlbeans-3.0.1.jar')
-    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.1.0-RC1/maven/poi/poi-4.1.0.jar')
-    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.1.0-RC1/maven/poi-ooxml/poi-ooxml-4.1.0.jar')
-    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.1.0-RC1/maven/poi-ooxml-schemas/poi-ooxml-schemas-4.1.0.jar')
-    compile files('/tmp/dist.apache.org/repos/dist/dev/poi/4.1.0-RC1/maven/poi-ooxml-schemas/poi-scratchpad-4.1.0.jar')*/
+    /*compile files('/tmp/poi-5.0.0-SNAPSHOT/lib/commons-collections4-4.4.jar')
+    compile files('/tmp/poi-5.0.0-SNAPSHOT/ooxml-lib/commons-compress-1.20.jar')
+    compile files('/tmp/poi-5.0.0-SNAPSHOT/lib/commons-math3-3.6.1.jar')
+    compile files('/tmp/poi-5.0.0-SNAPSHOT/ooxml-lib/xmlbeans-4.0.0.jar')
+    compile files('/tmp/poi-5.0.0-SNAPSHOT/poi-5.0.0-SNAPSHOT.jar')
+    compile files('/tmp/poi-5.0.0-SNAPSHOT/poi-ooxml-5.0.0-SNAPSHOT.jar')
+    compile files('/tmp/poi-5.0.0-SNAPSHOT/poi-ooxml-lite-5.0.0-SNAPSHOT.jar')
+    compile files('/tmp/poi-5.0.0-SNAPSHOT/poi-scratchpad-5.0.0-SNAPSHOT.jar')*/
 
     testCompile 'junit:junit:4.13.1'
 }

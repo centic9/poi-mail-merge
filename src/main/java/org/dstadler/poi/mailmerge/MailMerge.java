@@ -3,7 +3,6 @@ package org.dstadler.poi.mailmerge;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -13,9 +12,11 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 
 /**
  * Simple application which performs a "mail-merge" of a Microsoft Word template
@@ -71,7 +72,7 @@ public class MailMerge {
         }
     }
 
-    private void applyLines(Data dataIn, XWPFDocument doc) throws XmlException, IOException {
+    private void applyLines(Data dataIn, XWPFDocument doc) throws XmlException {
         // small hack to not having to rework the commandline parsing just now
         String includeIndicator = System.getProperty("org.dstadler.poi.mailmerge.includeindicator");
 
@@ -145,7 +146,7 @@ public class MailMerge {
 
         String suffix = srcString.substring( srcString.lastIndexOf("<") );
         String addPart = append.substring(append.indexOf(">") + 1, append.lastIndexOf("<"));
-        CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+addPart+suffix);
+        XmlObject makeBody = CTDocument1.Factory.parse(prefix+mainPart+addPart+suffix);
         src.set(makeBody);
     }
 }

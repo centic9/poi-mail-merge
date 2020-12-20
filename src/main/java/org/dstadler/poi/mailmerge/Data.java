@@ -1,5 +1,20 @@
 package org.dstadler.poi.mailmerge;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.format.CellFormat;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellReference;
+import org.dstadler.commons.logging.jdk.LoggerFactory;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,22 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.format.CellFormat;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.util.CellReference;
-import org.dstadler.commons.logging.jdk.LoggerFactory;
-
 /**
  * Helper class which handles reading the merge-file-data from
  * either a CSV or XLS/XLSX file.
@@ -33,8 +32,8 @@ import org.dstadler.commons.logging.jdk.LoggerFactory;
 public class Data {
     private static final Logger log = LoggerFactory.make();
 
-    private List<String> headers = new ArrayList<>();
-    private List<List<String>> values = new ArrayList<>();
+    private final List<String> headers = new ArrayList<>();
+    private final List<List<String>> values = new ArrayList<>();
 
     /**
      * Read the given file either as .csv or .xls/.xlsx file, depending
@@ -43,9 +42,8 @@ public class Data {
      * @param dataFile The merge-file to read. Can have extension .csv, .xls or .xlsx
      * @throws IOException If an error occurs while reading the file
      * @throws EncryptedDocumentException If the document is encrypted (passwords are not supported currently)
-     * @throws InvalidFormatException If the .xls/.xlsx file cannot be read due to a file-format error
      */
-    public void read(File dataFile) throws IOException, EncryptedDocumentException, InvalidFormatException {
+    public void read(File dataFile) throws IOException, EncryptedDocumentException {
         // read the lines from the data-file
         if(FilenameUtils.getExtension(dataFile.getName()).equalsIgnoreCase("csv")) {
             readCSVFile(dataFile);
@@ -112,7 +110,7 @@ public class Data {
         }
     }
 
-    private void readExcelFile(File excelFile) throws EncryptedDocumentException, InvalidFormatException, IOException {
+    private void readExcelFile(File excelFile) throws EncryptedDocumentException, IOException {
         try (Workbook wb = WorkbookFactory.create(excelFile, null, true)) {
             Sheet sheet = wb.getSheetAt(0);
 
@@ -156,9 +154,8 @@ public class Data {
                         data.add(null);
                     } else {
                         final String value;
-                        //noinspection deprecation
-                        switch (cell.getCellTypeEnum()) {
-                            //noinspection deprecation
+                        //noinspection SwitchStatementWithTooFewBranches
+                        switch (cell.getCellType()) {
                             case NUMERIC:
                                 // ensure that numeric are formatted the same way as in the Excel file.
                                 value = CellFormat.getInstance(cell.getCellStyle().getDataFormatString()).apply(cell).text;
