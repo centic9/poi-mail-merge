@@ -41,7 +41,7 @@ dependencies {
     compile files('/tmp/poi-5.0.0-SNAPSHOT/poi-ooxml-lite-5.0.0-SNAPSHOT.jar')
     compile files('/tmp/poi-5.0.0-SNAPSHOT/poi-scratchpad-5.0.0-SNAPSHOT.jar')*/
 
-    testCompile 'junit:junit:4.13.1'
+    testCompile 'junit:junit:4.13.2'
 }
 
 wrapper {
