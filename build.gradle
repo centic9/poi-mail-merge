@@ -7,7 +7,7 @@ version = '1.0'
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Application to produce mail-merge document from a template and a list of values', 'Implementation-Version': version
+        attributes 'Implementation-Title': 'Application to produce mail-merge document from a template and a list of values', 'Implementation-Version': archiveVersion
     }
 }
 
@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.12.0'
-    compile 'org.dstadler:commons-dost:1.0.0.32'
+    compile 'org.dstadler:commons-dost:1.0.0.33'
     compile 'com.google.guava:guava:30.1.1-jre'
     compile 'org.apache.commons:commons-csv:1.8'
 
