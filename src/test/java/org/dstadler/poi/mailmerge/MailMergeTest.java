@@ -6,19 +6,27 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class MailMergeTest {
     private static final File RESULT_FILE = new File("build/Result.docx");
 
+	@BeforeClass
+	public static void setUpClass() {
+		assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
+	}
+
+	@Before
+	public void setUp() {
+		// ensure the result file is not there
+		assertTrue("File should not exist or we should be able to delete it, exist: " + RESULT_FILE.exists(),
+				!RESULT_FILE.exists() || RESULT_FILE.delete());
+	}
+
     @Test
     public void test() throws Exception {
-        assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
-        // ensure the result file is not there
-        assertTrue("File should not exist or we should be able to delete it, exist: " + RESULT_FILE.exists(),
-                !RESULT_FILE.exists() || RESULT_FILE.delete());
-
         // use sample files to run a full merge
         MailMerge.main(new String[] {"samples/Template.docx", "samples/Lines.xlsx", RESULT_FILE.getPath()});
 
@@ -28,13 +36,6 @@ public class MailMergeTest {
 
     @Test
     public void testCSV() throws Exception {
-        assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
-
-        // ensure the result file is not there
-        assertTrue("File should not exist or we should be able to delete it, exist: " + RESULT_FILE.exists(),
-                !RESULT_FILE.exists() || RESULT_FILE.delete());
-
         // use sample files to run a full merge
         MailMerge.main(new String[] {"samples/Template.docx", "samples/Lines.csv", RESULT_FILE.getPath()});
 
@@ -44,8 +45,6 @@ public class MailMergeTest {
 
     @Test
     public void testNoArgs() throws Exception {
-        assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
         try {
             MailMerge.main(new String[] {});
             fail();
@@ -56,8 +55,6 @@ public class MailMergeTest {
 
     @Test
     public void testMissingDoc() throws Exception {
-        assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
         try {
             MailMerge.main(new String[] {"samples/Missing.docx", "samples/Lines.xlsx", RESULT_FILE.getPath()});
             fail();
@@ -68,8 +65,6 @@ public class MailMergeTest {
 
     @Test
     public void testInvalidDoc() throws Exception {
-        assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
         try {
             MailMerge.main(new String[] {"samples", "samples/Lines.xlsx", RESULT_FILE.getPath()});
             fail();
@@ -80,8 +75,6 @@ public class MailMergeTest {
 
     @Test
     public void testMissingXlsx() throws Exception {
-        assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
         try {
             MailMerge.main(new String[] {"samples/Template.docx", "samples/Missing.xlsx", RESULT_FILE.getPath()});
             fail();
@@ -92,8 +85,6 @@ public class MailMergeTest {
 
     @Test
     public void testInvalidXlsx() throws Exception {
-        assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
         try {
             MailMerge.main(new String[] {"samples/Template.docx", "samples", RESULT_FILE.getPath()});
             fail();
@@ -104,12 +95,6 @@ public class MailMergeTest {
 
     @Test
     public void testTagSplitByFormatting() throws Exception {
-        assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
-        // ensure the result file is not there
-        assertTrue("File should not exist or we should be able to delete it, exist: " + RESULT_FILE.exists(),
-                !RESULT_FILE.exists() || RESULT_FILE.delete());
-
         // use sample files to run a full merge
         MailMerge.main(new String[] {"samples/Template-TagSplitByFormatting.docx", "samples/Lines.xlsx", RESULT_FILE.getPath()});
 
@@ -121,12 +106,6 @@ public class MailMergeTest {
     public void testWithIncludeIndicator() throws Exception {
         System.setProperty("org.dstadler.poi.mailmerge.includeindicator", "Include");
         try {
-            assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
-            // ensure the result file is not there
-            assertTrue("File should not exist or we should be able to delete it, exist: " + RESULT_FILE.exists(),
-                    !RESULT_FILE.exists() || RESULT_FILE.delete());
-
             // use sample files to run a full merge
             MailMerge.main(new String[]{"samples/Template.docx", "samples/Lines.xlsx", RESULT_FILE.getPath()});
 
@@ -141,13 +120,6 @@ public class MailMergeTest {
     public void testWithIncludeIndicatorNoSuchColumn() throws Exception {
         System.setProperty("org.dstadler.poi.mailmerge.includeindicator", "Include");
         try {
-            assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
-
-
-            // ensure the result file is not there
-            assertTrue("File should not exist or we should be able to delete it, exist: " + RESULT_FILE.exists(),
-                    !RESULT_FILE.exists() || RESULT_FILE.delete());
-
             try {
                 MailMerge.main(new String[]{"samples/Template.docx", "samples/Lines.csv", RESULT_FILE.getPath()});
                 fail("Should fail because the system property points to an non-existing column");
