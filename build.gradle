@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.dstadler:commons-dost:1.1.0.0'
+    implementation 'org.dstadler:commons-dost:1.1.0.1'
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'org.apache.commons:commons-csv:1.9.0'
 
@@ -43,7 +43,7 @@ dependencies {
     implementation files('/tmp/poi-bin-5.1.0/poi-ooxml-full-5.1.0.jar')
     implementation files('/tmp/poi-bin-5.1.0/poi-scratchpad-5.1.0.jar')*/
 
-	implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
+	implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
 
     testImplementation 'junit:junit:4.13.2'
 }
