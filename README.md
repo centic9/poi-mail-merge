@@ -30,9 +30,9 @@ copy of the template for each line in the Excel file.
 
 ## Use it
 
-### Grab and compile it
+### Grab and build it
 
-    git clone git://github.com/centic9/poi-mail-merge
+    git clone https://github.com/centic9/poi-mail-merge.git
     cd poi-mail-merge
     ./gradlew installDist
 
