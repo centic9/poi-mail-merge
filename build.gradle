@@ -43,7 +43,7 @@ dependencies {
     implementation files('/tmp/poi-bin-5.1.0/poi-ooxml-full-5.1.0.jar')
     implementation files('/tmp/poi-bin-5.1.0/poi-scratchpad-5.1.0.jar')*/
 
-	implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
+	implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
 
     testImplementation 'junit:junit:4.13.2'
 }
