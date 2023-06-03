@@ -24,8 +24,8 @@ repositories {
 
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.dstadler:commons-dost:1.2.0.0'
-    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'org.dstadler:commons-dost:1.2.0.1'
+    implementation 'com.google.guava:guava:32.0.0-jre'
     implementation 'org.apache.commons:commons-csv:1.10.0'
 
     implementation 'org.apache.poi:poi:5.2.3'
