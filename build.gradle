@@ -13,13 +13,15 @@ jar {
 
 sourceCompatibility = JavaVersion.VERSION_11
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
 }
 
 repositories {
     mavenCentral()
-    // maven { url 'https://repository.apache.org/content/groups/staging/'}
+
+    // for testing newer Apache POI
+    // maven { url 'https://repository.apache.org/content/groups/staging/' }
 }
 
 dependencies {
@@ -51,19 +53,6 @@ dependencies {
 wrapper {
     gradleVersion = '7.6.1'
 }
-
-task adjustWrapperPropertiesFile {
-    doLast {
-        ant.replaceregexp(match: '^#.*', replace: '', flags: 'g', byline: true) {
-            fileset(dir: project.projectDir, includes: 'gradle/wrapper/gradle-wrapper.properties')
-        }
-        new File(project.projectDir, 'gradle/wrapper/gradle-wrapper.properties').with {
-            it.text = it.readLines().findAll { it }.sort().join('\n')
-        }
-        ant.fixcrlf(file: 'gradle/wrapper/gradle-wrapper.properties', eol: 'lf')
-    }
-}
-wrapper.finalizedBy adjustWrapperPropertiesFile
 
 test {
     systemProperties = System.properties
