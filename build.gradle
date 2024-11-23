@@ -11,7 +11,7 @@ jar {
     }
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
@@ -28,7 +28,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.17.0'
     implementation 'org.dstadler:commons-dost:1.3.4'
     implementation 'com.google.guava:guava:33.3.1-jre'
-    implementation 'org.apache.commons:commons-csv:1.10.0'
+    implementation 'org.apache.commons:commons-csv:1.12.0'
 
     implementation 'org.apache.poi:poi:5.3.0'
     implementation 'org.apache.poi:poi-ooxml:5.3.0'
@@ -45,9 +45,9 @@ dependencies {
     implementation files('/tmp/poi-bin-5.1.0/poi-ooxml-full-5.1.0.jar')
     implementation files('/tmp/poi-bin-5.1.0/poi-scratchpad-5.1.0.jar')*/
 
-	implementation 'org.apache.logging.log4j:log4j-core:2.24.0'
+	implementation 'org.apache.logging.log4j:log4j-core:2.24.2'
 
-    testImplementation 'org.junit.vintage:junit-vintage-engine:5.11.0'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.11.3'
 }
 
 wrapper {
@@ -65,5 +65,5 @@ test {
 }
 
 jacoco {
-    toolVersion = '0.8.11'
+    toolVersion = '0.8.12'
 }
