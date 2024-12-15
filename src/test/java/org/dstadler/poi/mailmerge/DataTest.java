@@ -5,38 +5,37 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-import static org.junit.Assert.*;
-
-public class DataTest {
+class DataTest {
 	private static final File EMPTY_XLSX = new File("build/Empty.xlsx");
 
 	@Test
-	public void testRead() throws Exception {
+    void testRead() throws Exception {
 		Data data = new Data();
 		data.read(new File("samples/Lines.xlsx"));
 
-		assertEquals("[Name, Organisation, Address, Zip, City, Salutation, Include, Date, , , , , , , , , , null]", data.getHeaders().toString());
-		assertEquals(4, data.getData().size());
+		Assertions.assertEquals("[Name, Organisation, Address, Zip, City, Salutation, Include, Date, , , , , , , , , , null]", data.getHeaders().toString());
+		Assertions.assertEquals(4, data.getData().size());
 	}
 
 	@Test
-	public void testReadCSV() throws Exception {
+    void testReadCSV() throws Exception {
 		Data data = new Data();
 		data.read(new File("samples/Lines.csv"));
 
-		assertEquals("[Name, Organisation, Address, Zip, City, Salutation]", data.getHeaders().toString());
-		assertEquals(3, data.getData().size());
+		Assertions.assertEquals("[Name, Organisation, Address, Zip, City, Salutation]", data.getHeaders().toString());
+		Assertions.assertEquals(3, data.getData().size());
 	}
 
 	@Test
-	public void testReadEmptyExcel() throws Exception {
-		assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
+    void testReadEmptyExcel() throws Exception {
+		Assertions.assertTrue(new File("build").exists() || new File("build").mkdirs(), "Failed to create directory 'build'");
 
 		// prepare a file without sheet
 		try (Workbook wb = new XSSFWorkbook()) {
@@ -48,15 +47,15 @@ public class DataTest {
 		Data data = new Data();
 		try {
 			data.read(EMPTY_XLSX);
-			fail();
+			Assertions.fail();
 		} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 			// expected here
 		}
 	}
 
 	@Test
-	public void testReadExcelNoRow() throws Exception {
-		assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
+    void testReadExcelNoRow() throws Exception {
+		Assertions.assertTrue(new File("build").exists() || new File("build").mkdirs(), "Failed to create directory 'build'");
 
 		// prepare a file without sheet
 		try (Workbook wb = new XSSFWorkbook()) {
@@ -71,15 +70,15 @@ public class DataTest {
 		Data data = new Data();
 		try {
 			data.read(EMPTY_XLSX);
-			fail();
+			Assertions.fail();
 		} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 			// expected here
 		}
 	}
 
 	@Test
-	public void testReadExcelEmptyRowInBetween() throws Exception {
-		assertTrue("Failed to create directory 'build'", new File("build").exists() || new File("build").mkdirs());
+    void testReadExcelEmptyRowInBetween() throws Exception {
+		Assertions.assertTrue(new File("build").exists() || new File("build").mkdirs(), "Failed to create directory 'build'");
 
 		// prepare a file without sheet
 		try (Workbook wb = new XSSFWorkbook()) {
@@ -100,36 +99,35 @@ public class DataTest {
 		Data data = new Data();
 		data.read(EMPTY_XLSX);
 
-		assertEquals("Had: " + data.getHeaders().toString(),
-				"[Header, null]", data.getHeaders().toString());
-		assertEquals(1, data.getData().size());
-		assertEquals("Had: " + data.getData().toString(),
-				"[[Value, null]]", data.getData().toString());
+		Assertions.assertEquals("[Header, null]", data.getHeaders().toString(), "Had: " + data.getHeaders().toString());
+		Assertions.assertEquals(1, data.getData().size());
+		Assertions.assertEquals("[[Value, null]]", data.getData().toString(), "Had: " + data.getData().toString());
 	}
 
 	@Test
-	public void testReadExcelFileWithoutSheet() throws Exception {
-		Workbook wb = new XSSFWorkbook();
-
+    void testReadExcelFileWithoutSheet() throws Exception {
 		File file = File.createTempFile("MailMergeDataTest", ".xlsx");
 		try {
-			assertTrue(file.delete());
-			try (OutputStream stream = new FileOutputStream(file)) {
-				wb.write(stream);
-			}
-			assertTrue(file.exists());
+			Assertions.assertTrue(file.delete());
 
-			Data data = new Data();
+			try (Workbook wb = new XSSFWorkbook()) {
+				try (OutputStream stream = new FileOutputStream(file)) {
+					wb.write(stream);
+				}
+				Assertions.assertTrue(file.exists());
 
-			try {
-				data.read(file);
-				fail("Will fail without sheet in the workbook");
-			} catch (IllegalArgumentException e) {
-				// expected here
-				assertNotNull(e);
+				Data data = new Data();
+
+				try {
+					data.read(file);
+					Assertions.fail("Will fail without sheet in the workbook");
+				} catch (IllegalArgumentException e) {
+					// expected here
+					Assertions.assertNotNull(e);
+				}
 			}
 		} finally {
-			assertTrue(!file.exists() || file.delete());
+			Assertions.assertTrue(!file.exists() || file.delete());
 		}
 	}
 }
