@@ -38,8 +38,7 @@ dependencies {
 
     implementation 'org.apache.poi:poi:5.3.0'
     implementation 'org.apache.poi:poi-ooxml:5.3.0'
-    // ooxml-full is needed for now, a later version of POI may allow to use ooxml-lite instead
-    implementation 'org.apache.poi:poi-ooxml-full:5.3.0'
+    implementation 'org.apache.poi:poi-ooxml-lite:5.3.0'
     implementation 'org.apache.poi:poi-scratchpad:5.3.0'
     /*implementation files('/tmp/poi-bin-5.1.0/lib/commons-collections4-4.4.jar')
     implementation files('/tmp/poi-bin-5.1.0/lib/commons-math3-3.6.1.jar')
