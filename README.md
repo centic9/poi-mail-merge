@@ -107,14 +107,12 @@ See centic9/poi-mail-merge#6 for possible improvements.
 
 ## Change it
 
-### Create Eclipse project files
-
-    ./gradlew eclipse
-
 ### Build it and run tests
 
     cd poi-mail-merge
     ./gradlew check jacocoTestReport
+
+Resulting coverage report is at `build/reports/jacoco/test/html/index.html`
 
 #### Licensing
 
