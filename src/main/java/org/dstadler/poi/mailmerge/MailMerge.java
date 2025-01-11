@@ -73,7 +73,7 @@ public class MailMerge {
         Data data = new Data();
         data.read(dataFile);
 
-        // now open the word file and apply the changes
+        // now open the document template and apply the changes
         try (InputStream is = new FileInputStream(wordTemplate)) {
             try (XWPFDocument doc = new XWPFDocument(is)) {
                 // apply the lines and concatenate the results into the document
@@ -165,12 +165,14 @@ public class MailMerge {
         if(first) {
             mainPart = "";
         } else {
+            // cut out the previous main part
             mainPart = srcString.substring(srcString.indexOf(">")+1,srcString.lastIndexOf("<"));
         }
 
+        // rebuild the XML by adding prefix, new main part and suffix together
         String suffix = srcString.substring( srcString.lastIndexOf("<") );
         String addPart = append.substring(append.indexOf(">") + 1, append.lastIndexOf("<"));
-        XmlObject makeBody = CTDocument1.Factory.parse(prefix+mainPart+addPart+suffix);
+        XmlObject makeBody = CTDocument1.Factory.parse(prefix + mainPart + addPart + suffix);
         src.set(makeBody);
     }
 }
