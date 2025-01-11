@@ -26,7 +26,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
  *
  * Call this application with parameters &lt;word-template&gt; &lt;excel/csv-template&gt; &lt;output-file&gt;
  *
- * The resulting document has all resulting documents concatenated.
+ * The resulting document has all resulting pages concatenated.
  */
 public class MailMerge {
     private static final Logger log = LoggerFactory.make();
@@ -34,14 +34,14 @@ public class MailMerge {
     /**
      * Main method to run Mail-Merge as application
      *
-     * @param args Expects three arguments: template-file, excel/csv-file and output-file
+     * @param args Expects three arguments: template-file, excel/csv-file and output-word-file
      * @throws IOException If processing fails
      */
     public static void main(String[] args) throws IOException {
         LoggerFactory.initLogging();
 
         if(args.length != 3) {
-            throw new IllegalArgumentException("Usage: MailMerge <word-template> <excel/csv-template> <output-file>");
+            throw new IllegalArgumentException("Usage: MailMerge <word-template> <excel/csv-template> <output-word-file>");
         }
 
         File wordTemplate = new File(args[0]);
@@ -63,7 +63,7 @@ public class MailMerge {
      *
      * @param wordTemplate The word-template to use
      * @param dataFile The Excel/CSV file which contains one row for each resulting page
-     * @param outputFile The output file
+     * @param outputFile The output word-document
      * @throws IOException If processing fails
      */
     public void merge(File wordTemplate, File dataFile, File outputFile) throws IOException {
@@ -119,34 +119,39 @@ public class MailMerge {
                 }
             }
 
-            String replaced = srcString;
-            for(int fieldNr = 0;fieldNr < headers.size();fieldNr++) {
-                String header = headers.get(fieldNr);
-                String value = data.get(fieldNr);
-
-                // ignore columns without headers as we cannot match them
-                if(header == null) {
-                    continue;
-                }
-
-                // use empty string for data-cells that have no value
-                if(value == null) {
-                    value = "";
-                }
-
-                replaced = replaced.replace("${" + header + "}", value);
-            }
-
-            // check for missed replacements or formatting which interferes
-            if(replaced.contains("${")) {
-                log.warning("Still found template-marker after doing replacement: " +
-                        StringUtils.abbreviate(StringUtils.substring(replaced, replaced.indexOf("${")), 200));
-            }
+            String replaced = replaceDataItems(data, srcString, headers);
 
             appendBody(body, replaced, first);
 
             first = false;
         }
+    }
+
+    private static String replaceDataItems(List<String> data, String srcString, List<String> headers) {
+        String replaced = srcString;
+        for(int fieldNr = 0; fieldNr < headers.size(); fieldNr++) {
+            String header = headers.get(fieldNr);
+            String value = data.get(fieldNr);
+
+            // ignore columns without headers as we cannot match them
+            if(header == null) {
+                continue;
+            }
+
+            // use empty string for data-cells that have no value
+            if(value == null) {
+                value = "";
+            }
+
+            replaced = replaced.replace("${" + header + "}", value);
+        }
+
+        // check for missed replacements or formatting which interferes
+        if(replaced.contains("${")) {
+            log.warning("Still found template-marker after doing replacement: " +
+                    StringUtils.abbreviate(StringUtils.substring(replaced, replaced.indexOf("${")), 200));
+        }
+        return replaced;
     }
 
     private static void appendBody(CTBody src, String append, boolean first) throws XmlException {
