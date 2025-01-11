@@ -1,5 +1,10 @@
 [![Build Status](https://github.com/centic9/poi-mail-merge/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/centic9/poi-mail-merge/actions)
 [![Gradle Status](https://gradleupdate.appspot.com/centic9/poi-mail-merge/status.svg?branch=master)](https://gradleupdate.appspot.com/centic9/poi-mail-merge/status)
+[![Release](https://img.shields.io/github/release/centic9/poi-mail-merge.svg)](https://github.com/centic9/poi-mail-merge/releases)
+[![GitHub release](https://img.shields.io/github/release/centic9/poi-mail-merge.svg?label=changelog)](https://github.com/centic9/poi-mail-merge/releases/latest)
+[![Tag](https://img.shields.io/github/tag/centic9/poi-mail-merge.svg)](https://github.com/centic9/poi-mail-merge/tags)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.dstadler/poi-mail-merge/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.dstadler/poi-mail-merge)
+[![Maven Central](https://img.shields.io/maven-central/v/org.dstadler/poi-mail-merge.svg)](https://maven-badges.herokuapp.com/maven-central/org.dstadler/poi-mail-merge)
 
 This is a small application which allows to repeatedly replace markers
 in a Microsoft Word document with items taken from a CSV/Microsoft Excel 
