@@ -3,6 +3,7 @@ package org.dstadler.poi.mailmerge;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -23,14 +24,20 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
  * document which contains replacement templates in the form of ${name}, ${first-name}, ...
  * and an Microsoft Excel spreadsheet which contains a list of entries that are merged in.
  *
- * Call this application with parameters <word-template> <excel/csv-template> <output-file>
+ * Call this application with parameters &lt;word-template&gt; &lt;excel/csv-template&gt; &lt;output-file&gt;
  *
  * The resulting document has all resulting documents concatenated.
  */
 public class MailMerge {
     private static final Logger log = LoggerFactory.make();
 
-    public static void main(String[] args) throws Exception {
+    /**
+     * Main method to run Mail-Merge as application
+     *
+     * @param args Expects three arguments: template-file, excel/csv-file and output-file
+     * @throws IOException If processing fails
+     */
+    public static void main(String[] args) throws IOException {
         LoggerFactory.initLogging();
 
         if(args.length != 3) {
@@ -51,7 +58,15 @@ public class MailMerge {
         new MailMerge().merge(wordTemplate, excelFile, new File(outputFile));
     }
 
-    public void merge(File wordTemplate, File dataFile, File outputFile) throws Exception {
+    /**
+     * Invoke mail-merge with the given input and output files.
+     *
+     * @param wordTemplate The word-template to use
+     * @param dataFile The Excel/CSV file which contains one row for each resulting page
+     * @param outputFile The output file
+     * @throws IOException If processing fails
+     */
+    public void merge(File wordTemplate, File dataFile, File outputFile) throws IOException {
         log.info("Merging data from " + wordTemplate + " and " + dataFile + " into " + outputFile);
 
         // read the data-rows from the CSV or XLS(X) file
@@ -62,7 +77,11 @@ public class MailMerge {
         try (InputStream is = new FileInputStream(wordTemplate)) {
             try (XWPFDocument doc = new XWPFDocument(is)) {
                 // apply the lines and concatenate the results into the document
-                applyLines(data, doc);
+                try {
+                    applyLines(data, doc);
+                } catch (XmlException e) {
+                    throw new IOException("Merging failed for template " + doc + " and data-file " + data, e);
+                }
 
                 log.info("Writing overall result to " + outputFile);
                 try (OutputStream out = new FileOutputStream(outputFile)) {
