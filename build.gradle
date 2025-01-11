@@ -35,7 +35,6 @@ archivesBaseName = 'poi-mail-merge'
 application {
      mainClass = 'org.dstadler.poi.mailmerge.MailMerge'
 }
-version = '1.0'
 
 jar {
     manifest {
