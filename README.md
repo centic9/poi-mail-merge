@@ -36,7 +36,7 @@ copy of the template for each line in the Excel file.
     cd poi-mail-merge
     ./gradlew installDist
 
-### Run it
+### Run it as standalone application
 
     ./run.sh <word-template> <excel/csv-file> <output-file>
 
@@ -52,7 +52,22 @@ on Unix you can use the following steps
 
     ./gradlew installDist
     ./run.sh samples/Template.docx samples/Lines.xlsx build/Result.docx
-	
+
+### Add it to your project as Gradle dependency and use it
+
+    compile 'org.dstadler:poi-mail-merge:1.+'
+
+Code example:
+
+    new MailMerge().merge(wordTemplate, excelFile, outputFile);
+
+### Release it
+
+    ./gradlew --console=plain release && ./gradlew closeAndReleaseRepository
+
+* This should automatically release the new version on MavenCentral
+* Afterwards go to the [Github releases page](https://github.com/centic9/poi-mail-merge/releases) and add release-notes
+
 ## Support this project
 
 If you find this tool useful and would like to support work on it, you can [Sponsor the author](https://github.com/sponsors/centic9)

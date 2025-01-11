@@ -48,10 +48,10 @@ public class MailMerge {
             throw new IllegalArgumentException("Could not read data file " + excelFile);
         }
 
-        new MailMerge().merge(wordTemplate, excelFile, outputFile);
+        new MailMerge().merge(wordTemplate, excelFile, new File(outputFile));
     }
 
-    private void merge(File wordTemplate, File dataFile, String outputFile) throws Exception {
+    public void merge(File wordTemplate, File dataFile, File outputFile) throws Exception {
         log.info("Merging data from " + wordTemplate + " and " + dataFile + " into " + outputFile);
 
         // read the data-rows from the CSV or XLS(X) file

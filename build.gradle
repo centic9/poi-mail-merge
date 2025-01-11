@@ -1,6 +1,36 @@
-apply plugin: 'java'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'de.thetaphi:forbiddenapis:3.8'
+    }
+}
+
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    // https://github.com/researchgate/gradle-release
+    id 'net.researchgate.release' version '3.0.2'
+    id 'io.codearte.nexus-staging' version '0.30.0'
+
+    // https://gradle-pitest-plugin.solidsoft.info/
+    id 'info.solidsoft.pitest' version '1.9.11'
+}
+
+apply plugin: 'de.thetaphi.forbiddenapis'
 apply plugin: 'jacoco'
+apply plugin: 'signing'
 apply plugin: 'application'
+
+java {
+    toolchain {
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+group = 'org.dstadler'
+archivesBaseName = 'poi-mail-merge'
 
 application {
      mainClass = 'org.dstadler.poi.mailmerge.MailMerge'
@@ -13,12 +43,6 @@ jar {
     }
 }
 
-java {
-    toolchain {
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
-}
-
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
@@ -28,6 +52,16 @@ repositories {
 
     // for testing newer Apache POI
     // maven { url 'https://repository.apache.org/content/groups/staging/' }
+}
+
+forbiddenApis {
+    suppressAnnotations = ['org.dstadler.commons.util.SuppressForbidden']
+    // 'jdk-unsafe'
+    bundledSignatures = [ 'jdk-system-out', 'jdk-non-portable', 'jdk-deprecated', 'jdk-reflection',
+                          'commons-io-unsafe-2.15.1', 'jdk-internal' ]
+}
+forbiddenApisMain {
+    signaturesFiles += files('config/forbidden-apis/forbidden.signatures.txt')
 }
 
 dependencies {
@@ -76,3 +110,73 @@ test {
 jacoco {
     toolVersion = '0.8.12'
 }
+
+tasks.register('sourcesJar', Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+tasks.register('javadocJar', Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc
+}
+
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+release {
+    git {
+        requireBranch.set('master')
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = archivesBaseName
+            from components.java
+
+            pom {
+                name = 'POI Mail Merge'
+                description = 'A small application which allows to repeatedly replace markers in a Microsoft Word ' +
+                        'document with items taken from a CSV/Microsoft Excel file.'
+                url = 'https://github.com/centic9/poi-mail-merge'
+                licenses {
+                    license {
+                        name = 'BSD 2-Clause "Simplified" License'
+                        url = 'https://github.com/centic9/poi-mail-merge/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'centic9'
+                        name = 'Dominik Stadler'
+                    }
+                }
+                scm {
+                    connection = 'scm:git@github.com:centic9/poi-mail-merge'
+                    developerConnection = 'scm:git@github.com:centic9/poi-mail-merge'
+                    url = 'https://github.com/centic9/poi-mail-merge'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            //url = layout.buildDirectory.dir('repo')
+            url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            credentials(PasswordCredentials)
+            //snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/')
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+afterReleaseBuild.dependsOn publish
