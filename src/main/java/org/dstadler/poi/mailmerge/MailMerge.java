@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -22,7 +24,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 /**
  * Simple application which performs a "mail-merge" of a Microsoft Word template
  * document which contains replacement templates in the form of ${name}, ${first-name}, ...
- * and an Microsoft Excel spreadsheet which contains a list of entries that are merged in.
+ * and a Microsoft Excel spreadsheet which contains a list of entries that are merged in.
  *
  * Call this application with parameters &lt;word-template&gt; &lt;excel/csv-template&gt; &lt;output-file&gt;
  *
@@ -101,8 +103,8 @@ public class MailMerge {
         String srcString = body.xmlText();
 
         // apply the replacements line-by-line
-        boolean first = true;
         List<String> headers = dataIn.getHeaders();
+        List<String> replacedDocs = new ArrayList<>();
         for(List<String> data : dataIn.getData()) {
             log.info("Applying to template: " + data);
 
@@ -120,11 +122,10 @@ public class MailMerge {
             }
 
             String replaced = replaceDataItems(data, srcString, headers);
-
-            appendBody(body, replaced, first);
-
-            first = false;
+            replacedDocs.add(replaced);
         }
+
+        appendBody(body, replacedDocs);
     }
 
     private static String replaceDataItems(List<String> data, String srcString, List<String> headers) {
@@ -154,25 +155,29 @@ public class MailMerge {
         return replaced;
     }
 
-    private static void appendBody(CTBody src, String append, boolean first) throws XmlException {
+    private static void appendBody(CTBody src, List<String> appendDocs) throws XmlException {
         XmlOptions optionsOuter = new XmlOptions();
         optionsOuter.setSaveOuter();
         String srcString = src.xmlText();
-        String prefix = srcString.substring(0,srcString.indexOf(">")+1);
 
-        final String mainPart;
         // exclude template itself in first appending
-        if(first) {
-            mainPart = "";
-        } else {
-            // cut out the previous main part
-            mainPart = srcString.substring(srcString.indexOf(">")+1,srcString.lastIndexOf("<"));
-        }
+        String prefix = srcString.substring(0,srcString.indexOf(">")+1);
+        String suffix = srcString.substring( srcString.lastIndexOf("<") );
 
         // rebuild the XML by adding prefix, new main part and suffix together
-        String suffix = srcString.substring( srcString.lastIndexOf("<") );
-        String addPart = append.substring(append.indexOf(">") + 1, append.lastIndexOf("<"));
-        XmlObject makeBody = CTDocument1.Factory.parse(prefix + mainPart + addPart + suffix);
+        StringBuilder addPart = new StringBuilder();
+        Iterator<String> it = appendDocs.iterator();
+        while (it.hasNext()) {
+            String append = it.next();
+
+            addPart.append(append, append.indexOf(">") + 1, append.lastIndexOf("<"));
+
+            // remove original item from the list to free memory early
+            it.remove();
+        }
+
+        // produce resulting document by combining prefix, actual pages and suffix
+        XmlObject makeBody = CTDocument1.Factory.parse(prefix + addPart + suffix);
         src.set(makeBody);
     }
 }
