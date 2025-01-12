@@ -165,19 +165,20 @@ public class MailMerge {
         String suffix = srcString.substring( srcString.lastIndexOf("<") );
 
         // rebuild the XML by adding prefix, new main part and suffix together
-        StringBuilder addPart = new StringBuilder();
+        StringBuilder document = new StringBuilder(prefix);
         Iterator<String> it = appendDocs.iterator();
         while (it.hasNext()) {
             String append = it.next();
 
-            addPart.append(append, append.indexOf(">") + 1, append.lastIndexOf("<"));
+            document.append(append, append.indexOf(">") + 1, append.lastIndexOf("<"));
 
             // remove original item from the list to free memory early
             it.remove();
         }
+        document.append(suffix);
 
-        // produce resulting document by combining prefix, actual pages and suffix
-        XmlObject makeBody = CTDocument1.Factory.parse(prefix + addPart + suffix);
+        // produce resulting XML-structure
+        XmlObject makeBody = CTDocument1.Factory.parse(document.toString());
         src.set(makeBody);
     }
 }
