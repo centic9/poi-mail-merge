@@ -66,6 +66,15 @@ Code example:
 
     new MailMerge().merge(wordTemplate, excelFile, outputFile);
 
+## Change it
+
+### Build it and run tests
+
+    cd poi-mail-merge
+    ./gradlew check jacocoTestReport
+
+Resulting coverage report is at `build/reports/jacoco/test/html/index.html`
+
 ### Release it
 
     ./gradlew --console=plain release && ./gradlew closeAndReleaseRepository
@@ -124,15 +133,6 @@ A workaround is to use the formatting tool in LibreOffice/OpenOffice to ensure
 that the replacement tags have only one formatting applied to them. 
 
 See centic9/poi-mail-merge#6 for possible improvements.
-
-## Change it
-
-### Build it and run tests
-
-    cd poi-mail-merge
-    ./gradlew check jacocoTestReport
-
-Resulting coverage report is at `build/reports/jacoco/test/html/index.html`
 
 #### Licensing
 
