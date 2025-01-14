@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -144,7 +145,7 @@ public class MailMerge {
                 value = "";
             }
 
-            replaced = replaced.replace("${" + header + "}", value);
+            replaced = replaced.replace("${" + header + "}", StringEscapeUtils.escapeXml11(value));
         }
 
         // check for missed replacements or formatting which interferes

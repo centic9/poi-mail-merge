@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -43,53 +44,33 @@ class MailMergeTest {
     }
 
     @Test
-    void testNoArgs() throws Exception {
-        try {
-            MailMerge.main(new String[] {});
-            fail();
-        } catch (@SuppressWarnings("unused") IllegalArgumentException e) {
-            // expected here
-        }
+    void testNoArgs() {
+        assertThrows(IllegalArgumentException.class,
+            () -> MailMerge.main(new String[] {}));
     }
 
     @Test
-    void testMissingDoc() throws Exception {
-        try {
-            MailMerge.main(new String[] {"samples/Missing.docx", "samples/Lines.xlsx", RESULT_FILE.getPath()});
-            fail();
-        } catch (@SuppressWarnings("unused") IllegalArgumentException e) {
-            // expected here
-        }
+    void testMissingDoc() {
+        assertThrows(IllegalArgumentException.class,
+            () -> MailMerge.main(new String[] {"samples/Missing.docx", "samples/Lines.xlsx", RESULT_FILE.getPath()}));
     }
 
     @Test
-    void testInvalidDoc() throws Exception {
-        try {
-            MailMerge.main(new String[] {"samples", "samples/Lines.xlsx", RESULT_FILE.getPath()});
-            fail();
-        } catch (@SuppressWarnings("unused") IllegalArgumentException e) {
-            // expected here
-        }
+    void testInvalidDoc() {
+        assertThrows(IllegalArgumentException.class,
+            () -> MailMerge.main(new String[] {"samples", "samples/Lines.xlsx", RESULT_FILE.getPath()}));
     }
 
     @Test
-    void testMissingXlsx() throws Exception {
-        try {
-            MailMerge.main(new String[] {"samples/Template.docx", "samples/Missing.xlsx", RESULT_FILE.getPath()});
-            fail();
-        } catch (@SuppressWarnings("unused") IllegalArgumentException e) {
-            // expected here
-        }
+    void testMissingXlsx() {
+        assertThrows(IllegalArgumentException.class,
+            () -> MailMerge.main(new String[] {"samples/Template.docx", "samples/Missing.xlsx", RESULT_FILE.getPath()}));
     }
 
     @Test
-    void testInvalidXlsx() throws Exception {
-        try {
-            MailMerge.main(new String[] {"samples/Template.docx", "samples", RESULT_FILE.getPath()});
-            fail();
-        } catch (@SuppressWarnings("unused") IllegalArgumentException e) {
-            // expected here
-        }
+    void testInvalidXlsx() {
+        assertThrows(IllegalArgumentException.class,
+            () -> MailMerge.main(new String[] {"samples/Template.docx", "samples", RESULT_FILE.getPath()}));
     }
 
     @Test
