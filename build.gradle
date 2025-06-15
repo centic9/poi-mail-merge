@@ -33,7 +33,7 @@ group = 'org.dstadler'
 archivesBaseName = 'poi-mail-merge'
 
 application {
-     mainClass = 'org.dstadler.poi.mailmerge.MailMerge'
+    mainClass = 'org.dstadler.poi.mailmerge.MailMerge'
     applicationDefaultJvmArgs = ['-Xmx256m', '-XX:+HeapDumpOnOutOfMemoryError', '-XX:HeapDumpPath=/tmp']
 }
 
