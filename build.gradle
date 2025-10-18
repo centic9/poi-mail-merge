@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'de.thetaphi:forbiddenapis:3.9'
+        classpath 'de.thetaphi:forbiddenapis:3.10'
     }
 }
 
@@ -11,7 +11,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     // https://github.com/researchgate/gradle-release
-    id 'net.researchgate.release' version '3.0.2'
+    id 'net.researchgate.release' version '3.1.0'
     id 'io.codearte.nexus-staging' version '0.30.0'
 
     // https://gradle-pitest-plugin.solidsoft.info/
@@ -58,16 +58,16 @@ forbiddenApis {
     suppressAnnotations = ['org.dstadler.commons.util.SuppressForbidden']
     // 'jdk-unsafe'
     bundledSignatures = [ 'jdk-system-out', 'jdk-non-portable', 'jdk-deprecated', 'jdk-reflection',
-                          'commons-io-unsafe-2.18.0', 'jdk-internal' ]
+                          'commons-io-unsafe-2.19.0', 'jdk-internal' ]
 }
 forbiddenApisMain {
     signaturesFiles += files('config/forbidden-apis/forbidden.signatures.txt')
 }
 
 dependencies {
-    implementation 'org.apache.commons:commons-lang3:3.18.0'
+    implementation 'org.apache.commons:commons-lang3:3.19.0'
     implementation 'org.dstadler:commons-dost:1.4.3'
-    implementation 'com.google.guava:guava:33.4.8-jre'
+    implementation 'com.google.guava:guava:33.5.0-jre'
     implementation 'org.apache.commons:commons-csv:1.14.0'
     implementation 'org.apache.commons:commons-text:1.14.0'
 
@@ -85,11 +85,11 @@ dependencies {
     implementation files('/tmp/poi-bin-5.1.0/poi-ooxml-full-5.1.0.jar')
     implementation files('/tmp/poi-bin-5.1.0/poi-scratchpad-5.1.0.jar')*/
 
-	implementation 'org.apache.logging.log4j:log4j-core:2.25.1'
+	implementation 'org.apache.logging.log4j:log4j-core:2.25.2'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.13.4'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.13.4'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:6.0.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.0.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.0.0'
 }
 
 wrapper {
@@ -109,7 +109,7 @@ test {
 }
 
 jacoco {
-    toolVersion = '0.8.13'
+    toolVersion = '0.8.14'
 }
 
 tasks.register('sourcesJar', Jar) {
