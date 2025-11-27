@@ -51,7 +51,7 @@ repositories {
     mavenCentral()
 
     // for testing newer Apache POI
-    // maven { url 'https://repository.apache.org/content/groups/staging/' }
+    // maven { url = 'https://repository.apache.org/content/groups/staging/' }
 }
 
 forbiddenApis {
